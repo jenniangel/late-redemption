@@ -1,0 +1,14 @@
+11844 0 0 ..\Engine\Localization\KOR\core.KOR 8bd13d7680886e78dd236d5bfaeb2d88
+15916 0 0 ..\Engine\Localization\KOR\descriptions.KOR c0e6d17d76d3e51c4cf8ad78cf5a88b8
+10480 0 0 ..\Engine\Localization\KOR\EditorTips.kor 96dd67a78ab9eee1f7546daf9bee38f8
+18900 0 0 ..\Engine\Localization\KOR\Engine.kor 1e15e868a669b3ba4811092d19a92b8f
+0 0 0 ..\Engine\Localization\KOR\gfxui.KOR d41d8cd98f00b204e9800998ecf8427e
+910 0 0 ..\Engine\Localization\KOR\gfxuieditor.KOR d8e79c53518e4f71ab03206719b7ca2b
+1396 0 0 ..\Engine\Localization\KOR\launch.KOR 6676b7a5f147527553ebcd2a254da2a0
+208 0 0 ..\Engine\Localization\KOR\onlinesubsystemgamespy.KOR dcfa90d8b89826f7f9950827d2577a9a
+2244 0 0 ..\Engine\Localization\KOR\startup.KOR 5c30f9fdd1e167d720c0d16aa452205c
+72 0 0 ..\Engine\Localization\KOR\subtitles.KOR 5441dd0500c99f4e3899b1d6176e7b43
+434740 0 0 ..\Engine\Localization\KOR\UnrealEd.kor dd5f22e1bbe21ca26b03c5228d08fcaa
+710 0 0 ..\Engine\Localization\KOR\windrv.KOR 2da88c1d3fb777607f2d8feb73d90000
+154 0 0 ..\Engine\Localization\KOR\xwindow.KOR d7e8fbde0db231549d48da362f89f161
+1119 0 0 ..\UDKGame\PCTOC_KOR.txt 0
