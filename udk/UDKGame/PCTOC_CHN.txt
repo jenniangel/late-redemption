@@ -1,0 +1,14 @@
+16588 0 0 ..\Engine\Localization\CHN\core.CHN c1d84613ed8b99cd86fac09a1c1bc499
+14790 0 0 ..\Engine\Localization\CHN\descriptions.CHN df6b8a464d488fca4d77565238c09d19
+8668 0 0 ..\Engine\Localization\CHN\editortips.CHN f8a85e089a881aa03c469d88177343b4
+24692 0 0 ..\Engine\Localization\CHN\Engine.chn 1774c8928017ac01e4ad986e5a045b4f
+126 0 0 ..\Engine\Localization\CHN\gfxui.CHN 19f9bf1528bf94a23f85fd7731dd04bd
+1484 0 0 ..\Engine\Localization\CHN\gfxuieditor.CHN 1d3142fc9ba681104511bb9799cdb657
+1466 0 0 ..\Engine\Localization\CHN\launch.CHN 75920e0624e92378048b99a3c6b4203c
+254 0 0 ..\Engine\Localization\CHN\onlinesubsystemgamespy.CHN 3fc6ca581afb72e9dea93cf03d6f4f31
+3452 0 0 ..\Engine\Localization\CHN\startup.CHN df06fafffc7105bea1a5d0ea5614c04e
+76 0 0 ..\Engine\Localization\CHN\subtitles.CHN 1b8879d5bc1d2287cede45145984d148
+388212 0 0 ..\Engine\Localization\CHN\unrealed.CHN 1205707df4c06422869055ad2e76f30c
+892 0 0 ..\Engine\Localization\CHN\windrv.CHN 006db8d1e5d38c4cd75be969ccf63a80
+212 0 0 ..\Engine\Localization\CHN\xwindow.CHN 02e00615bfdbc54bb51fa2bbb164e94e
+1121 0 0 ..\UDKGame\PCTOC_CHN.txt 0
