@@ -15,8 +15,6 @@ const MINGROUNDSPEED=300;
 const MAXTICKERCOUNTER=20;
 const REDUCESPEEDONTIMEOUT= -350;
 
-
-
 var ScreamerController myController;  // Classe de IA para o Screamer
 
 var float tickCounter;
@@ -39,20 +37,26 @@ defaultproperties
 logactive = true;
 
 	// Soldado
-	defaultMesh=SkeletalMesh'CH_IronGuard_Male.Mesh.SK_CH_IronGuard_MaleA'
-	defaultAnimTree=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
-	defaultAnimSet(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
-	defaultPhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
-
+	//defaultMesh=SkeletalMesh'CH_IronGuard_Male.Mesh.SK_CH_IronGuard_MaleA'
+	//defaultAnimTree=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
+	//defaultAnimSet(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
+	//defaultPhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
+	
+	//Screamer
+	
+	defaultMesh=SkeletalMesh'CH_Screamer.Mesh.SK_Screamer'
+	defaultAnimTree=AnimTree'CH_Screamer.Anims.AnimTree_Screamer'
+	defaultAnimSet(0)=AnimSet'CH_Screamer.Anims.Anim_Screamer'
+	defaultPhysicsAsset=PhysicsAsset'CH_Screamer.Mesh.SK_Screamer_Physics'
+	
 	// Zumbi
 	//defaultMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
 
-
 	Begin Object Name=WPawnSkeletalMeshComponent
-//		SkeletalMesh=SkeletalMesh'CH_IronGuard_Male.Mesh.SK_CH_IronGuard_MaleA'
-		SkeletalMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
-        AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
-		AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
+	//SkeletalMesh=SkeletalMesh'CH_IronGuard_Male.Mesh.SK_CH_IronGuard_MaleA'
+		SkeletalMesh=SkeletalMesh'CH_Screamer.Mesh.SK_Screamer'
+		AnimTreeTemplate=AnimTree'CH_Screamer.Anims.AnimTree_Screamer'
+		AnimSets(0)=AnimSet'CH_Screamer.Anims.Anim_Screamer'
 
 		bOwnerNoSee=false
 		CastShadow=true
