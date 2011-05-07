@@ -1,3 +1,6 @@
+/**
+ * Copyright 2011 Late Redemption, Inc. All Rights Reserved.
+ */
 class UTWeap_Glock extends UTWeapon;
 
 // AI properties (for shock combos)
@@ -326,8 +329,9 @@ defaultproperties
 	InstantHitMomentum(0)=+60000.0
 
 	WeaponFireTypes(0)=EWFT_InstantHit
-	WeaponFireTypes(1)=EWFT_Projectile
-	WeaponProjectiles(1)=class'UTProj_ShockBall'
+	WeaponFireTypes(1)=EWFT_None // Desabilita o tiro com o botão direito do mouse.
+	//WeaponFireTypes(1)=EWFT_Projectile
+	//WeaponProjectiles(1)=class'UTProj_ShockBall'
 
 	InstantHitDamage(0)=45
 	FireInterval(0)=+0.77
@@ -366,11 +370,11 @@ defaultproperties
 	WeaponFireAnim(1)=WeaponAltFire
 
 	MuzzleFlashSocket=MF
-	MuzzleFlashPSCTemplate=WP_ShockRifle.Particles.P_ShockRifle_MF_Alt
-	MuzzleFlashAltPSCTemplate=WP_ShockRifle.Particles.P_ShockRifle_MF_Alt
+	//MuzzleFlashPSCTemplate=WP_ShockRifle.Particles.P_ShockRifle_MF_Alt
+	//MuzzleFlashAltPSCTemplate=WP_ShockRifle.Particles.P_ShockRifle_MF_Alt
 	MuzzleFlashColor=(R=200,G=120,B=255,A=255)
 	MuzzleFlashDuration=0.33
-	MuzzleFlashLightClass=class'UTGame.UTShockMuzzleFlashLight'
+	//MuzzleFlashLightClass=class'UTGame.UTShockMuzzleFlashLight'
 	CrossHairCoordinates=(U=256,V=0,UL=64,VL=64)
 	LockerRotation=(Pitch=32768,Roll=16384)
 
