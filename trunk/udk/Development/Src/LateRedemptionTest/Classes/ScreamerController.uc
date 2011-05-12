@@ -1,46 +1,55 @@
 class ScreamerController extends AIController;
 
-//------------------------------------------------------------------
+//==================================================================
 //-----------------------------Variables----------------------------
-//------------------------------------------------------------------
-var ScreamerPawn myScreamer1Pawn;    // Screamer controlled by this IA.
-var Pawn thePlayer;                  // Player - must die...
+//==================================================================
+var ScreamerPawn myScreamer;      // Screamer controlled by this IA.
+var Pawn thePlayer;               // Player - must die...
 
-var () array<NavigationPoint> MyNavigationPoints;
+var int actual_node;              // Used during navigation
+var int last_node;                // Used during navigation
 
-var int actual_node;
-var int last_node;
+var Name AnimSetName;             // Just overwrite parent value.
 
-var float perceptionDistance;     // Myopia factor :)
-var () float attackDistance;      // Anything within this radio will die
-var float distanceToPlayer;       // No comments.
-
-var Name AnimSetName;
-
-var bool  followingPath;          // Moviment is ongoing
+var bool  followingPath;          // Movement is ongoing
+var float distanceToPlayer;       // No comments...
 var Float IdleInterval;
-const ADDSPEEDONHIT=350;          // Increase in speed at hit.
+
+//------------------------------------------------------------------
+// Variables you get directly from the ScreamerPawn Class
+//------------------------------------------------------------------
+var array<NavigationPoint> navigationPointsScreamer;
+var float perceptionDistance;     // Myopia factor :)
+var float attackDistance;         // Anything within this radio dies
 
 
+
+//==================================================================
+//-----------Just in case they are not initialized,-----------------
+//---------------let's give them a default value--------------------
+//==================================================================
 defaultproperties
 {
-   attackDistance = 300.0f
-   perceptionDistance = 10000
-   AnimSetName ="ATTACK"
    actual_node = 0
    last_node = 0
+   AnimSetName ="ATTACK"
    followingPath = true
-   IdleInterval = 2.5f
 }
 
 
 
-//------------------------------------------------------------------
+//==================================================================
 //----------------------Global Functions/Events---------------------
+//--------They can be unleashed no matter the state we are----------
+//==================================================================
+
+//------------------------------------------------------------------
+// This function is only used for debug purpose. It simply unleashes
+// internal messages in case the logactive flag is turned on.
 //------------------------------------------------------------------
 function LogMessage(String texto)
 {
-   if (myScreamer1Pawn.logactive)
+   if (myScreamer.logactive)
    {
       Worldinfo.Game.Broadcast(self, texto);
    }
@@ -48,15 +57,27 @@ function LogMessage(String texto)
 
 
 //------------------------------------------------------------------
+// Function triggered by the ScreamerPawn Class when a new Screamer
+// is created (it associates an Pawn object with its controller
+// object). Some important variable values are sync at this moment.
+//------------------------------------------------------------------
 function SetPawn(ScreamerPawn NewPawn)
 {
    LogMessage("Function ScreamerController SetPawn");
-   myScreamer1Pawn = NewPawn;
-   Possess(myScreamer1Pawn, false);
-   MyNavigationPoints = myScreamer1Pawn.MyNavigationPoints;
+   myScreamer = NewPawn;
+   Possess(myScreamer, false);
+   myScreamer.SetAttacking(false);
+   navigationPointsScreamer = myScreamer.navigationPointsScreamer;
+   perceptionDistance = myScreamer.perceptionDistance;
+   attackDistance = myScreamer.attackDistance;
+   IdleInterval = myScreamer.idleTime;
 }
 
 
+//------------------------------------------------------------------
+// This function is called when the Pawn being controlled by this
+// controller gets alive (it is called from within above function
+// which is triggered when the ScreamerPawn is Spawned).
 //------------------------------------------------------------------
 function Possess(Pawn aPawn, bool bVehicleTransition)
 {
@@ -72,28 +93,39 @@ function Possess(Pawn aPawn, bool bVehicleTransition)
       LogMessage("Function ScreamerController Possess Success");
       Super.Possess(aPawn, bVehicleTransition);
       Pawn.SetMovementPhysics();
-      if (Pawn.Physics == PHYS_Walking)
-      {
-         Pawn.SetPhysics(PHYS_Falling);
-      }
    }
 }
 
 
 //------------------------------------------------------------------
+// Whenever the Pawn is hit, it will inform its controller by means
+// of this function.
+// The action being taken is to lock target on player, send a
+// request towards the Pawn Class to increase its speed (revenge
+// timer and attack sub-states are triggered here) and change 
+// the internal state value.
+// If the player is too far from the Screamer, the Screamer will 
+// start a Patrol mechanism, searching for him (Patrol to be fully]
+// implemented in the Demo-2 version.
+//------------------------------------------------------------------
 function NotifyTakeHit1()
 {
    LogMessage("Event ScreamerController NotifyTakeHit");
    thePlayer = GetALocalPlayerController().Pawn;
-   myScreamer1Pawn.ChangeSpeed(ADDSPEEDONHIT);
    distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
+   if (myScreamer.AttAcking == true)
+   {
+      myScreamer.SetAttacking(false);
+      myScreamer.StopFire(0);
+   }
+
    if (distanceToPlayer < perceptionDistance)
    { 
-      GotoState('Pursuit');
+      GotoState('Pursuit');                 // Go after Player
    }
    else
    {
-      GotoState('FollowPath');
+      GotoState('FollowPath');              // Search the Player
    }
 }
 
@@ -101,6 +133,11 @@ function NotifyTakeHit1()
 
 //------------------------------------------------------------------
 //------------------------------State = IDLE------------------------
+// In this state, the Screamer will wait for a while (IdleInterval)
+// and in case Player is not visible, it will start a patrol.
+// (The Patrol mechanism will be fully implemented in demo-2).
+// This is the default state - the one triggered after the 
+// Screamer is possessed.
 //------------------------------------------------------------------
 auto state Idle
 {
@@ -120,22 +157,39 @@ auto state Idle
 
    Begin:
       LogMessage("State ScreamerController Idle");
+
       Pawn.Acceleration = vect(0,0,0);
       Sleep(IdleInterval);
+
       actual_node = last_node;
-      GotoState('FollowPath');
+      GotoState('FollowPath');                   // Start Patrol
 }
 
 
 
 //------------------------------------------------------------------
 //------------------------------State = Pursuit---------------------
+// Either when the Player is detected or when the Screamer is hit
+// by a player projectile and the distance between the player and the
+// Screamer is within the perception distance limit, this state 
+// will be unleashed. The action sequence within this state ensures
+// that wherever the player goes, the Screamer will be following him.
+// - If the Screamer loose contact with Player, it will go back to 
+//   the idle State (and in sequence, will restart the Patrol 
+//   mechanism - to be implemented in phase-2).
+// - In case player is not reachable (e.g.: protected by a wall),
+//   the Screamer will try to reach him by going through some of its 
+//   known anchor places (to be implemented in phase-2, as this
+//   is part of the patrol mechanism)).
+// - If the player is close enough (i.e.: it is within the Attack
+//   distance value), the state will be changed to Attack.
 //------------------------------------------------------------------
 state Pursuit
 {
    Begin:
       LogMessage("State ScreamerController Pursuit");
       Pawn.Acceleration = vect(0,0,1);
+      MoveToward(thePlayer, thePlayer, attackDistance);
 
       while (Pawn != none && thePlayer.Health > 0)
       {
@@ -159,15 +213,16 @@ state Pursuit
          }
          else
          {
-            MoveTarget = FindPathToward(thePlayer,,perceptionDistance);
+            MoveTarget = FindPathToward(thePlayer);
             if (MoveTarget != none)
             {
-               Worldinfo.Game.Broadcast(self, "Moving toward Player");
+               LogMessage("ScreamerController Moving Towards Player");
                distanceToPlayer = VSize(MoveTarget.Location - Pawn.Location);
-               if (distanceToPlayer < attackDistance)
-                  MoveToward(MoveTarget, thePlayer, attackDistance);
-               else
-                  MoveToward(MoveTarget, MoveTarget, attackDistance);
+               MoveToward(MoveTarget, thePlayer, attackDistance);
+//             if (distanceToPlayer < 100)
+//                MoveToward(MoveTarget, thePlayer, 20.0f);
+//             else
+//                MoveToward(MoveTarget, MoveTarget, 20.0f);
             }
             else
             {
@@ -177,44 +232,54 @@ state Pursuit
          }
          Sleep(1);
       }
-	  GotoState('Idle');
+      GotoState('Idle');
 }
-
-
 
 
 
 //------------------------------------------------------------------
 //------------------------------State = Attack---------------------
+// If we reached this state (by the way, global state Attack is kept
+// when revenge timer is active as well - i.e.: state Revenge is
+// in fact a Attack Sub-state) it means that Player is under 
+// Screamer's fireballs range. Hunting season has just begun...
+// If the player is able to escape from Screamer's fire sight (either
+// by hiding himself or by fleeing), Screamer state will be moved 
+// back to Pursuit.
 //------------------------------------------------------------------
 state Attack
 {
    Begin:
       LogMessage("State ScreamerController Attack");
-	  myScreamer1Pawn.ZeroMovementVariables();
-      myScreamer1Pawn.SetAttacking(true);
-      myScreamer1Pawn.StartFire(0);
-      MoveToward(thePlayer, thePlayer, attackDistance);
+      Sleep(0.1);
+      myScreamer.ZeroMovementVariables();
+      myScreamer.SetAttacking(true);
+      myScreamer.StartFire(0);
 
-	while(true && thePlayer.Health > 0)
+      while(true && thePlayer.Health > 0)
       {   
-         distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
-         if (distanceToPlayer > attackDistance * 2)
-         { 
-            myScreamer1Pawn.SetAttacking(false);
-            myScreamer1Pawn.StopFire(0);
+         if (!ActorReachable(thePlayer))
+         {
+            myScreamer.SetAttacking(false);
+            myScreamer.StopFire(0);
             GotoState('Pursuit');
             break;
          }
-         if (distanceToPlayer < attackDistance / 2)
-		 {
-  //        MoveTo(FindRandomDest().Location);
-		 }
+
+         distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
+         if (distanceToPlayer > attackDistance * 2)
+         { 
+            myScreamer.SetAttacking(false);
+            myScreamer.StopFire(0);
+            GotoState('Pursuit');
+            break;
+         }
          Sleep(1);
+
       }
-      myScreamer1Pawn.StopFire(0);
-      myScreamer1Pawn.SetAttacking(false);
-	  GotoState('Idle');
+      myScreamer.StopFire(0);
+      myScreamer.SetAttacking(false);
+      GotoState('Idle');
 
 }
 
@@ -224,6 +289,16 @@ state Attack
 
 //------------------------------------------------------------------
 //------------------------------State = FollowPath------------------
+// When the Screamer is hit by a bullet but the Player is too far,
+// rather than initiating an offensive against the player, it will
+// start a patrol process trying to move towards reference points
+// whereas searching for the player.
+// This Patrol is also triggered by default after some time without
+// action (timer defined by IdleInterval parameter) and as mentioned
+// earlier, it will be fully implemented at Demo-2 game version.
+// It is important to notice that in this state, the Screamer will
+// keep searching for the Player and in case it is visible, it will
+// start its hunting sequence by going to Pursuit state.
 //------------------------------------------------------------------
 state FollowPath
 {
@@ -243,35 +318,35 @@ state FollowPath
 
       LogMessage("State FollowPath");
       followingPath = true;
+      thePlayer = GetALocalPlayerController().Pawn;
 
       while(followingPath)
       {
-         MoveTarget = MyNavigationPoints[actual_node];
+         MoveTarget = navigationPointsScreamer[actual_node];
 
          if(Pawn.ReachedDestination(MoveTarget))
          {
-            //WorldInfo.Game.Broadcast(self, "Encontrei o node");
             actual_node++;
 
-            if (actual_node >= MyNavigationPoints.Length)
+            if (actual_node >= navigationPointsScreamer.Length)
             {
                actual_node = 0;
             }
             last_node = actual_node;
 
-            MoveTarget = MyNavigationPoints[actual_node];
+            MoveTarget = navigationPointsScreamer[actual_node];
          }
          if (ActorReachable(MoveTarget))
          {
-            MoveToward(MoveTarget, MoveTarget);	
+            MoveToward(MoveTarget, thePlayer);	
          }
          else
          {
-            MoveTarget = FindPathToward(MyNavigationPoints[actual_node]);
+            MoveTarget = FindPathToward(navigationPointsScreamer[actual_node]);
             if (MoveTarget != none)
             {
                //SetRotation(RInterpTo(Rotation,Rotator(MoveTarget.Location),Delta,90000,true));
-               MoveToward(MoveTarget, MoveTarget);
+               MoveToward(MoveTarget, thePlayer);
             }
          }
          Sleep(1);

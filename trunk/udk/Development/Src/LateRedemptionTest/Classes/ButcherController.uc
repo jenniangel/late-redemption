@@ -3,23 +3,18 @@ class ButcherController extends AIController;
 //==================================================================
 //-----------------------------Variables----------------------------
 //==================================================================
-var ButcherPawn myButcher1Pawn;    // Butcher controlled by this IA.
+var ButcherPawn myButcher;         // Butcher controlled by this IA.
 var Pawn thePlayer;                // Player - must die...
-
-var int actual_node;              // Used during navigation
-var int last_node;                // Used during navigation
 
 var Name AnimSetName;
 
 var bool  followingPath;          // Movement is ongoing
 var float distanceToPlayer;       // No comments...
 var Float IdleInterval;
-const ADDSPEEDONHIT=350;          // Increase in speed at hit.
 
 //------------------------------------------------------------------
 // Variables you get directly from the ButcherPawn Class
 //------------------------------------------------------------------
-var array<NavigationPoint> navigationPointsButcher;
 var float perceptionDistance;     // Myopia factor :)
 var float attackDistance;         // Anything within this radio dies
 
@@ -31,10 +26,6 @@ var float attackDistance;         // Anything within this radio dies
 //==================================================================
 defaultproperties
 {
-   actual_node = 0
-   last_node = 0
-   perceptionDistance = 10000
-   attackDistance = 50
    AnimSetName ="ATTACK"
    followingPath = true
    IdleInterval = 2.5f
@@ -53,7 +44,7 @@ defaultproperties
 //------------------------------------------------------------------
 function LogMessage(String texto)
 {
-   if (myButcher1Pawn.logactive)
+   if (myButcher.logactive)
    {
       Worldinfo.Game.Broadcast(self, texto);
    }
@@ -68,12 +59,11 @@ function LogMessage(String texto)
 function SetPawn(ButcherPawn NewPawn)
 {
    LogMessage("Function ButcherController SetPawn");
-   myButcher1Pawn = NewPawn;
-   Possess(myButcher1Pawn, false);
-   myButcher1Pawn.SetAttacking(false);
-   navigationPointsButcher = myButcher1Pawn.navigationPointsButcher;
-   perceptionDistance = myButcher1Pawn.perceptionDistance;
-   attackDistance = myButcher1Pawn.attackDistance;
+   myButcher = NewPawn;
+   Possess(myButcher, false);
+   myButcher.SetAttacking(false);
+   perceptionDistance = myButcher.perceptionDistance;
+   attackDistance = myButcher.attackDistance;
 }
 
 
@@ -116,7 +106,6 @@ function NotifyTakeHit1()
 {
    LogMessage("Event ButcherController NotifyTakeHit");
    thePlayer = GetALocalPlayerController().Pawn;
-   myButcher1Pawn.ChangeSpeed(ADDSPEEDONHIT);   // Revenge Timer...
    distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
    GotoState('Pursuit');                        // Go after Player
 }
@@ -175,6 +164,7 @@ state Pursuit
    Begin:
       LogMessage("State ButcherController Pursuit");
       Pawn.Acceleration = vect(0,0,1);
+      MoveToward(thePlayer, thePlayer, 20.0f, true);
 
       while (Pawn != none && thePlayer.Health > 0)
       {
@@ -201,12 +191,13 @@ state Pursuit
             MoveTarget = FindPathToward(thePlayer);
             if (MoveTarget != none)
             {
-               LogMessage("Moving Towards Player");
+               LogMessage("Butcher Controller Moving Towards Player");
                distanceToPlayer = VSize(MoveTarget.Location - Pawn.Location);
-               if (distanceToPlayer < 100)
-                  MoveToward(MoveTarget, thePlayer, 20.0f);
-               else
-                  MoveToward(MoveTarget, MoveTarget, 20.0f);
+               MoveToward(MoveTarget, thePlayer, attackDistance);
+//             if (distanceToPlayer < 100)
+//                MoveToward(MoveTarget, thePlayer, 80.0f);
+//             else
+//                MoveToward(MoveTarget, thePlayer, attackDistance);
             }
             else
             {
@@ -237,15 +228,15 @@ state Attack
 {
    Begin:
       LogMessage("State ButcherController Attack");
-      myButcher1Pawn.SetAttacking(true);
+      myButcher.SetAttacking(true);
       Pawn.Acceleration = vect(0,0,0);
 
       while(true && thePlayer.Health > 0)
       {   
          if (!ActorReachable(thePlayer))
          {
-            myButcher1Pawn.SetAttacking(false);
-            myButcher1Pawn.StopFire(0);
+            myButcher.SetAttacking(false);
+            myButcher.StopFire(0);
             GotoState('Pursuit');
             break;
          }
@@ -253,12 +244,12 @@ state Attack
          distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
          if (distanceToPlayer > attackDistance * 2)
          { 
-            myButcher1Pawn.SetAttacking(false);
+            myButcher.SetAttacking(false);
             GotoState('Pursuit');
             break;
          }
          Sleep(1);
       }
-      myButcher1Pawn.SetAttacking(false);
+      myButcher.SetAttacking(false);
       GotoState('Idle');
 }

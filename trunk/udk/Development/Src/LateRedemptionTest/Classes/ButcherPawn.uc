@@ -11,38 +11,43 @@ var PhysicsAsset defaultPhysicsAsset;          // Custom Mesh member
 var MaterialInterface defaultMaterial0;        // Custom Mesh member
 var Name AnimSetName;
 
-const MAXGROUNDSPEED=800;
-const MINGROUNDSPEED=100;
-const MAXTICKERCOUNTER=20;
-const REDUCESPEEDONTIMEOUT= -350;
+const DEFAULTMAXGROUNDSPEED=900;
+const DEFAULTMINGROUNDSPEED=100;
 
-var ButcherController myController;        // Butcher IA Controller
+var ButcherController myController;         // Butcher IA Controller
 var float tickCounter;                      // Timing variable
 var int reduceSpeedTimer;                   // Timing variable
+var int changeSpeed;                        // Change fury states
 var bool AttAcking;                         // Flag to indicate state
-var () bool logactive;                      // Turn debug on-off
 
 //------------------------------------------------------------------
 // Variables to be used by the Controller Class
 //------------------------------------------------------------------
-var () float perceptionDistance;            // Myopia factor :)
-var () float attackDistance;                // Death distance.
-var () array<NavigationPoint> navigationPointsButcher;
+var (LateRedemption) bool logactive;           // Turn debug on-off
+var (LateRedemption) float perceptionDistance; // Myopia factor :)
+var (LateRedemption) float attackDistance;     // Death distance.
+var (LateRedemption) int revengeTimer;         // Fury time lenght  
+var (LateRedemption) int minGroundSpeed;       // Minimum Ground Speed
+var (LateRedemption) int maxGroundSpeed;       // Minimum Ground Speed
+var (LateRedemption) int initialHealth;        // Initial Health
 
 
 
+defaultproperties
 //==================================================================
 //-----------Just in case they are not initialized,-----------------
 //---------------let's give them a default value--------------------
 //==================================================================
-defaultproperties
 {
-   GroundSpeed = MINGROUNDSPEED
-   AnimSetName="ATTACK"
-   AttAcking=false
+   minGroundSpeed = 100;
+   maxGroundSpeed = 900;
+   AnimSetName = "ATTACK"
+   AttAcking = false
    logactive = false;
-   perceptionDistance = 10000
+   perceptionDistance = 5000
    attackDistance = 50
+   revengeTimer = 5
+   initialHealth = 100
 
    defaultMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
    defaultAnimTree=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
@@ -69,7 +74,7 @@ defaultproperties
    mesh = WPawnSkeletalMeshComponent
 
    Begin Object Name=CollisionCylinder
-      CollisionRadius=+0041.000000
+      CollisionRadius=+0015.000000
       CollisionHeight=+0044.000000
       BlockZeroExtent=false
    End Object
@@ -100,6 +105,23 @@ simulated function PostBeginPlay()
 {
    super.PostBeginPlay();
    SetPhysics(PHYS_Walking);
+   if (maxGroundSpeed > minGroundSpeed)
+   {
+      groundSpeed = minGroundSpeed;
+   }
+   else
+   {
+      groundSpeed = DEFAULTMINGROUNDSPEED;
+      maxGroundSpeed = DEFAULTMAXGROUNDSPEED;
+   }
+
+   if (initialHealth > 0)
+   {
+      health = initialHealth;
+   }
+
+   changeSpeed = (maxGroundSpeed - minGroundSpeed)/2;
+
    if (myController == none)
    {
       myController = Spawn(class'ButcherController', self);
@@ -131,7 +153,7 @@ function LogMessage(String texto)
 //------------------------------------------------------------------
 function SetAttacking(bool atacar)
 {
-   AttAcking = atacar;
+	AttAcking = atacar;
 }
 
 
@@ -147,14 +169,14 @@ function SetAttacking(bool atacar)
 // On the opposite direction, when revenge timer runs out, this 
 // function is internally called in order to decrease the Butcher
 // speed, changing in this way its Attack sub-state
-// It means that in case the ChangeSpeed succeeds in changing the
+// It means that in case the ChangePawnSpeed succeeds in changing the
 // Butcher speed, it is going from Attack to Revenge or from Revenge
 // to Insane states.
-// If the ChangeSpeed succeeds in decreasing its speed, it changes
+// If the ChangePawnSpeed succeeds in decreasing its speed, it changes
 // its state on the opposite direction Insane -> Revenge or 
 // Revenge -> Attack.
 //------------------------------------------------------------------
-function ChangeSpeed(int speed)
+function ChangePawnSpeed(int speed)
 {
    reduceSpeedTimer = 0;                   // Reset revenge timer
    groundspeed = groundspeed + speed;
@@ -178,6 +200,7 @@ function ChangeSpeed(int speed)
 event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocation, Object.Vector Momentum, class<DamageType> DamageType, optional Actor.TraceHitInfo HitInfo, optional Actor DamageCauser)
 {
    LogMessage("Event Pawn TakeDamage");
+   ChangePawnSpeed(changeSpeed);
    super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
    myController.NotifyTakeHit1();
 }
@@ -195,39 +218,29 @@ event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocat
 // Here, revenge timer is also implemented, with the aid of
 // reduceSpeedTimer variable so that when a predetermined timeout
 // (equal to 100 Ticks) is reached, a request to reduce the 
-// Butcher speed will be carried out by calling the ChangeSpeed
+// Butcher speed will be carried out by calling the ChangePawnSpeed
 // function with a negative value (in this case, if the Attack 
 // sub-state is Revenge, it will be set back to Normal Attack).
 //------------------------------------------------------------------
 simulated event Tick(float DeltaTime)
 {
-   local UTPawn gv;
    super.Tick(DeltaTime);
-   if (tickCounter < MAXTICKERCOUNTER)
+   if (tickCounter < 1)
    {
-      tickCounter +=1;
+      tickCounter +=DeltaTime;
+//	  teste = string(tickCounter);
+
    }
-   else                            // Wait 10 primary timer intervals
+   else                            // Wait one second
    {
-      reduceSpeedtimer = reduceSpeedtimer + 1;
+      reduceSpeedtimer += 1;
       tickCounter = 0;
-      foreach VisibleCollidingActors(class'UTPawn', gv, 100)
-      {
-         if(AttAcking && gv != none)
-         {
-            if(gv.Health > 10)     // Contact will not kill player.
-            {
-               gv.Health -= 1;
-               gv.IsInPain();
-            }
-         }
-      }
    }
    
-   if (reduceSpeedTimer == 10)     // Wait 100 primary timer intervals
+   if (reduceSpeedTimer == revengeTimer)     // Wait "n" seconds
    {
       reduceSpeedTimer = 0;
-      ChangeSpeed(REDUCESPEEDONTIMEOUT);
+      ChangePawnSpeed(-changeSpeed);
    }
 
 }
