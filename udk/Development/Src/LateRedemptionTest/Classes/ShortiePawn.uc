@@ -176,7 +176,10 @@ function SetAttacking(bool atacar)
 
 function SetPlayerVisible(bool visible)
 {
-    self.PlaySound(shortieAwake, false, true);
+    if (playerVisible != visible)
+    {
+       self.PlaySound(shortieAwake, false, true);
+    }
 	playerVisible = visible;
 }
 
