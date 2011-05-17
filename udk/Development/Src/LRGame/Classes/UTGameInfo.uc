@@ -21,6 +21,23 @@ function AddDefaultInventory( pawn PlayerPawn )
 	PlayerPawn.AddDefaultInventory();
 
 }
-defaultproperties
+
+DefaultProperties
 {
+ //Indentify your GameInfo
+ Acronym="LR"
+
+ //The class for your playerController (created later)
+ //PlayerControllerClass=class'ScaleformTutorial.STPlayerController'
+
+ //The class for your GFx HUD Wrapper (created later)
+ HUDType=class'LRGame.LRHUD'
+
+ //This variable was created by Epic Games to allow back compatability with UIScenes
+ bUseClassicHUD=true
+
+ //Required values
+ bDelayedStart=false
+ bRestartLevel=false
+ Name="Default__UTGameInfo"
 }
