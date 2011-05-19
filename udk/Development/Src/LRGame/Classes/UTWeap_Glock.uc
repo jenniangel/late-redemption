@@ -361,9 +361,9 @@ defaultproperties
 	FireOffset=(X=20,Y=5)
 	PlayerViewOffset=(X=17,Y=10.0,Z=-8.0)
 
-	AmmoCount=999
-	LockerAmmoCount=999
-	MaxAmmoCount=999
+	AmmoCount=100
+	LockerAmmoCount=200
+	MaxAmmoCount=200
 
 	FireCameraAnim(1)=CameraAnim'Camera_FX.ShockRifle.C_WP_ShockRifle_Alt_Fire_Shake'
 
