@@ -25,6 +25,8 @@ var bool groupAttack;                       // Join forces??
 
 //------------------------------------------------------------------
 // Variables to be used by the Controller Class
+// All of these variables can be edited from within the UDK editor
+// just by pressing F4 over a ShortiePawn monster.
 //------------------------------------------------------------------
 var (LateRedemption) bool logactive;        // Turn debug on-off
 var (LateRedemption) float perceptionDistance; // Myopia factor :)
@@ -53,7 +55,7 @@ defaultproperties
    attackDistance = 20
    revengeTimer = 5
    initialHealth = 100
-
+   bCanPickupInventory = false
    defaultMesh=SkeletalMesh'CH_IronGuard_Male.Mesh.SK_CH_IronGuard_MaleA'
    defaultAnimTree=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
    defaultAnimSet(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
@@ -107,6 +109,9 @@ defaultproperties
 //------------------------------------------------------------------
 // The main purpose of this function is to establish the link
 // between this Pawn and its controller Class.
+// In addition to that, this function initiates some important 
+// properties, based on the values eventually changed by the user
+// directly on the editable variables.
 //------------------------------------------------------------------
 simulated function PostBeginPlay()
 {
@@ -167,7 +172,8 @@ function HandleEvent(String event)
 // Whenever the Attack State is changed within the Controller class,
 // (i.e.: either entering or leaving the Attack state) this function 
 // is called so that the Attacking variable can be properly updated.
-// This variable can be useful to trigger future Kismet Sequences.
+// This variable is useful in order to be used by the Anime editor
+// (so that the attack sequence can be unleashed.
 //------------------------------------------------------------------
 function SetAttacking(bool atacar)
 {
@@ -282,7 +288,7 @@ simulated event Tick(float DeltaTime)
          {
             if(seenPawn.Health > 5)      // Contact will kill player.
             {
-               seenPawn.Health -= 5;
+               seenPawn.health -= 5;
 			   self.PlaySound(shortieAttack, false, true);
             }
 			else

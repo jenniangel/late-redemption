@@ -23,8 +23,10 @@ var ScreamerWeapon weaponscr;
 
 //------------------------------------------------------------------
 // Variables to be used by the Controller Class
+// All of these variables can be edited from within the UDK editor
+// just by pressing F4 over a ScreamerPawn monster.
 //------------------------------------------------------------------
-var (LateRedemption) bool logactive;        // Turn debug on-off
+var (LateRedemption) bool logactive;           // Turn debug on-off
 var (LateRedemption) float perceptionDistance; // Myopia factor :)
 var (LateRedemption) float attackDistance;     // Distance to start firing.
 var (LateRedemption) int revengeTimer;         // Fury time in seconds
@@ -54,6 +56,7 @@ defaultproperties
    initialHealth = 100
    firingRate = 1.0
    idleTime = 10
+   bCanPickupInventory = false
 
    defaultMesh=SkeletalMesh'CH_Screamer.Mesh.SK_Screamer'
    defaultAnimTree=AnimTree'CH_Screamer.Anims.AnimTree_Screamer'
@@ -119,6 +122,10 @@ function AddDefaultInventory()
 //------------------------------------------------------------------
 // The main purpose of this function is to establish the link
 // between this Pawn and its controller Class.
+// In addition to that, this function initiates some important 
+// properties, based on the values eventually changed by the user
+// directly on the editable variables and also adds the Screamer
+// weapon (fireball emmiter).
 //------------------------------------------------------------------
 simulated function PostBeginPlay()
 {
@@ -170,7 +177,8 @@ function LogMessage(String texto)
 // Whenever the Attack State is changed within the Controller class,
 // (i.e.: either entering or leaving the Attack state) this function 
 // is called so that the Attacking variable can be properly updated.
-// This variable can be useful to trigger future Kismet Sequences.
+// This variable is useful in order to be used by the Anime editor
+// (so that the attack sequence can be unleashed.
 //------------------------------------------------------------------
 function SetAttacking(bool atacar)
 {
@@ -189,9 +197,7 @@ function SetAttacking(bool atacar)
 // It will be called by the Controller class whenever it receives
 // the notification that the Screamer has been hit requesting to
 // increase its speed velocity and also its speed to toss fireballs.
-// (Note: Changes in the toss fireball speed will be implemented
-// in Demo-2 version)
-// Before changing these values, the Butcher must check whether the
+// Before changing these values, the Screamer must check whether the
 // new requested values are within acceptable limits.
 // On the opposite direction, when revenge timer runs out, this 
 // function is internally called in order to decrease these values.
@@ -230,7 +236,7 @@ function ChangePawnSpeed(int speed)
 
 //------------------------------------------------------------------
 // This event is notified whenever the Screamer is hit. It has been
-// overwritten here just to send a notification for the controller
+// overwritten here just to send a notification to the controller
 // class by calling the NotifyTakeHit1 function.
 //------------------------------------------------------------------
 event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocation, Object.Vector Momentum, class<DamageType> DamageType, optional Actor.TraceHitInfo HitInfo, optional Actor DamageCauser)
@@ -246,17 +252,18 @@ event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocat
 //------------------------------------------------------------------
 // This event is from utmost importance to every Pawn.
 // At some pre-determined intervals (usually between 0.05 and 0.1 
-// seconds) this event will be triggered and for instance, the Pawn
-// can use these notifications in order to take timing based actions.
-// In this case, a function to drain the Player life is implemented
-// in order to reduce the Player health whereas he is in contact
-// with the Screamer.
+// seconds - it depends on the computer capacity) this event will 
+// be triggered and for instance, the Pawn can use these notifications 
+// in order to take timing based actions (basically, the primarily
+// intervals, determined by the DeltaTime will be added till 
+// completion of 1 second).
 // Here, revenge timer is also implemented, with the aid of
 // reduceSpeedTimer variable so that when a predetermined timeout
-// (equal to 100 Ticks) is reached, a request to reduce the 
-// Screamer speed will be carried out by calling the ChangePawnSpeed
-// function with a negative value (in this case, if the Attack 
-// sub-state is Revenge, it will be set back to Normal Attack).
+// (defined by configurable variable revengeTimer) is reached, 
+// a request to reduce the Screamer speed will be carried out by 
+// calling the ChangePawnSpeed function with a negative value 
+// (in this case, if the Attack sub-state is Revenge, it will be 
+// set back to Normal Attack).
 //------------------------------------------------------------------
 simulated event Tick(float DeltaTime)
 {
@@ -266,7 +273,7 @@ simulated event Tick(float DeltaTime)
    {
       tickCounter +=DeltaTime;
    }
-   else                            // Wait one second
+   else                                      // Wait one second
    {
       reduceSpeedtimer += 1;
       tickCounter = 0;

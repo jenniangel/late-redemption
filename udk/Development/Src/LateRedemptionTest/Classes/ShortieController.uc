@@ -108,6 +108,7 @@ function NotifyTakeHit1(bool hitFromPLayer)
    thePlayer = GetALocalPlayerController().Pawn;
 
    distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
+   myShortie.SetPlayerVisible(true);
    GotoState('Pursuit');                      // Go after Player
 }
 
