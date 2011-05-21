@@ -249,9 +249,9 @@ state Attack
 {
    Begin:
       LogMessage("State ScreamerController Attack");
-      Sleep(0.1);
       myScreamer.ZeroMovementVariables();
       myScreamer.SetAttacking(true);
+      Sleep(0.5);
       myScreamer.StartFire(0);
 
       while(true && thePlayer.Health > 0)
