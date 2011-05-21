@@ -105,8 +105,10 @@ function Possess(Pawn aPawn, bool bVehicleTransition)
 // timer and attack sub-states are triggered here) and change 
 // the internal state value.
 // If the player is too far from the Screamer, the Screamer will 
-// start a Patrol mechanism, searching for him (Patrol to be fully]
-// implemented in the Demo-2 version.
+// start a cover routine, trying to go to a safe place or try to
+// close the distance towards the player.
+// Also this is the momment to stop attacking (if attack is ongoing)
+// in order to restart it latter on (eventually in the fury mode).
 //------------------------------------------------------------------
 function NotifyTakeHit1()
 {
@@ -125,7 +127,7 @@ function NotifyTakeHit1()
    }
    else
    {
-      GotoState('FollowPath');              // Search the Player
+      GotoState('FollowPath');              // Run from the Player
    }
 }
 
@@ -135,9 +137,10 @@ function NotifyTakeHit1()
 //------------------------------State = IDLE------------------------
 // In this state, the Screamer will wait for a while (IdleInterval)
 // and in case Player is not visible, it will start a patrol.
-// (The Patrol mechanism will be fully implemented in demo-2).
 // This is the default state - the one triggered after the 
 // Screamer is possessed.
+// If when in this state, the player enters the vision radio, a
+// pursuit will start.
 //------------------------------------------------------------------
 auto state Idle
 {
@@ -176,11 +179,10 @@ auto state Idle
 // that wherever the player goes, the Screamer will be following him.
 // - If the Screamer loose contact with Player, it will go back to 
 //   the idle State (and in sequence, will restart the Patrol 
-//   mechanism - to be implemented in phase-2).
+//   mechanism).
 // - In case player is not reachable (e.g.: protected by a wall),
 //   the Screamer will try to reach him by going through some of its 
-//   known anchor places (to be implemented in phase-2, as this
-//   is part of the patrol mechanism)).
+//   known anchor places.
 // - If the player is close enough (i.e.: it is within the Attack
 //   distance value), the state will be changed to Attack.
 //------------------------------------------------------------------
@@ -219,10 +221,6 @@ state Pursuit
                LogMessage("ScreamerController Moving Towards Player");
                distanceToPlayer = VSize(MoveTarget.Location - Pawn.Location);
                MoveToward(MoveTarget, thePlayer, attackDistance);
-//             if (distanceToPlayer < 100)
-//                MoveToward(MoveTarget, thePlayer, 20.0f);
-//             else
-//                MoveToward(MoveTarget, MoveTarget, 20.0f);
             }
             else
             {
@@ -291,14 +289,15 @@ state Attack
 //------------------------------State = FollowPath------------------
 // When the Screamer is hit by a bullet but the Player is too far,
 // rather than initiating an offensive against the player, it will
-// start a patrol process trying to move towards reference points
-// whereas searching for the player.
-// This Patrol is also triggered by default after some time without
-// action (timer defined by IdleInterval parameter) and as mentioned
-// earlier, it will be fully implemented at Demo-2 game version.
+// start a movement process trying to move towards reference points
+// whereas searching for the player or trying to hide from the 
+// player bullets.
+// This patrol is also triggered by default after some time without
+// action (timer defined by IdleInterval parameter).
 // It is important to notice that in this state, the Screamer will
-// keep searching for the Player and in case it is visible, it will
-// start its hunting sequence by going to Pursuit state.
+// keep an eye opened searching for the Player and in case it is 
+// visible, it will start its hunting sequence by going to Pursuit 
+// state.
 //------------------------------------------------------------------
 state FollowPath
 {
@@ -345,7 +344,6 @@ state FollowPath
             MoveTarget = FindPathToward(navigationPointsScreamer[actual_node]);
             if (MoveTarget != none)
             {
-               //SetRotation(RInterpTo(Rotation,Rotator(MoveTarget.Location),Delta,90000,true));
                MoveToward(MoveTarget, thePlayer);
             }
          }

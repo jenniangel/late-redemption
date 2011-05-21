@@ -22,6 +22,8 @@ var bool AttAcking;                         // Flag to indicate state
 
 //------------------------------------------------------------------
 // Variables to be used by the Controller Class
+// All of these variables can be edited from within the UDK editor
+// just by pressing F4 over a ButcherPawn monster.
 //------------------------------------------------------------------
 var (LateRedemption) bool logactive;           // Turn debug on-off
 var (LateRedemption) float perceptionDistance; // Myopia factor :)
@@ -48,6 +50,7 @@ defaultproperties
    attackDistance = 50
    revengeTimer = 5
    initialHealth = 100
+   bCanPickupInventory = false
 
    defaultMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
    defaultAnimTree=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
@@ -100,6 +103,9 @@ defaultproperties
 //------------------------------------------------------------------
 // The main purpose of this function is to establish the link
 // between this Pawn and its controller Class.
+// In addition to that, this function initiates some important 
+// properties, based on the values eventually changed by the user
+// directly on the editable variables.
 //------------------------------------------------------------------
 simulated function PostBeginPlay()
 {
@@ -149,7 +155,8 @@ function LogMessage(String texto)
 // Whenever the Attack State is changed within the Controller class,
 // (i.e.: either entering or leaving the Attack state) this function 
 // is called so that the Attacking variable can be properly updated.
-// This variable can be useful to trigger future Kismet Sequences.
+// This variable is useful in order to be used by the Anime editor
+// (so that the attack sequence can be unleashed.
 //------------------------------------------------------------------
 function SetAttacking(bool atacar)
 {
@@ -210,17 +217,18 @@ event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocat
 //------------------------------------------------------------------
 // This event is from utmost importance to every Pawn.
 // At some pre-determined intervals (usually between 0.05 and 0.1 
-// seconds) this event will be triggered and for instance, the Pawn
-// can use these notifications in order to take timing based actions.
-// In this case, a function to drain the Player life is implemented
-// in order to reduce the Player health whereas he is in contact
-// with the Butcher.
+// seconds - it depends on the computer capacity) this event will 
+// be triggered and for instance, the Pawn can use these notifications 
+// in order to take timing based actions (basically, the primarily
+// intervals, determined by the DeltaTime will be added till 
+// completion of 1 second).
 // Here, revenge timer is also implemented, with the aid of
 // reduceSpeedTimer variable so that when a predetermined timeout
-// (equal to 100 Ticks) is reached, a request to reduce the 
-// Butcher speed will be carried out by calling the ChangePawnSpeed
-// function with a negative value (in this case, if the Attack 
-// sub-state is Revenge, it will be set back to Normal Attack).
+// (defined by configurable variable revengeTimer) is reached,
+// a request to reduce the Butcher speed will be carried out by 
+// calling the ChangePawnSpeed function with a negative value (in 
+// this case, if the Attack sub-state is Revenge, it will be set 
+// back to Normal Attack).
 //------------------------------------------------------------------
 simulated event Tick(float DeltaTime)
 {
