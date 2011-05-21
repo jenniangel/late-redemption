@@ -1,7 +1,8 @@
 /**
  * Copyright 2011 Late Redemption, Inc. All Rights Reserved.
  */
-class UTWeap_Glock extends UTWeapon;
+
+ class UTWeap_Glock extends UTWeapon;
 
 // AI properties (for shock combos)
 var UTProj_ShockBall ComboTarget;
@@ -41,7 +42,7 @@ simulated function WeaponEmpty()
 	}
 	
 
-	super.WeaponEmpty();
+	//super.WeaponEmpty();
 }
 
 function AcionarReload()

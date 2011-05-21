@@ -618,5 +618,6 @@ defaultproperties
 	VoiceClass=class'UTGame.UTVoice_Robot'
 	CharPortrait=Texture2D'CH_IronGuard_Headshot.HUD_Portrait_Liandri'
 
-	CharClassInfo=class'UTGame.UTFamilyInfo_Liandri_Male'
+	//CharClassInfo=class'UTGame.UTFamilyInfo_Liandri_Male'
+	CharClassInfo=class'UTGame.UTFamilyInfo_Marshall'
 }
