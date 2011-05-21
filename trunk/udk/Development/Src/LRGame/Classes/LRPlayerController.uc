@@ -1,7 +1,5 @@
 class LRPlayerController extends UTPlayerController;
 
-
-
 exec function RequestReload()
 {
 	local UTWeap_Glock mywp;

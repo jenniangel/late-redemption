@@ -1,8 +1,9 @@
 class LRGFxHUD extends GFxMoviePlayer;
 
-
 //Create a Health Cache variable
 var float LastHealthpc;
+
+var bool bGammaCorrection;
 
 //Create variables to hold references to the Flash MovieClips and Text Fields that will be modified
 var GFxObject Hora;

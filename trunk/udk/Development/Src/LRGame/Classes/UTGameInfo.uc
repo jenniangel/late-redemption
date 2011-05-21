@@ -1,4 +1,5 @@
 class UTGameInfo extends UTGame;
+
 function AddDefaultInventory( pawn PlayerPawn )
 {
 	local int i;
