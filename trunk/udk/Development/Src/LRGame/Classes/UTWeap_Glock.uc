@@ -9,8 +9,109 @@ var bool bRegisterTarget;
 var bool bWaitForCombo;
 var vector ComboStart;
 
+var int clips;
+var bool bIsReloading;
+
 var bool bWasACombo;
 var int CurrentPath;
+
+var  (LateRedemption) SoundCue SomRecarregarArma;
+
+
+
+//-------------------------------------------------------------------------
+// funcções para reload e clip
+//-------------------------------------------------------------------------
+simulated function bool DoOverrideNextWeapon()
+{
+	if(clips == 0)
+		super.DoOverrideNextWeapon();
+
+	return false;
+}
+
+simulated function WeaponEmpty()
+{
+	if(clips > 0 && !bIsReloading)
+	{
+		bIsReloading = true;
+		//SetTimer(2.0, false, 'Reload');
+		AcionarReload();
+		return;
+	}
+	
+
+	super.WeaponEmpty();
+}
+
+function AcionarReload()
+{
+	PlaySound(SomRecarregarArma);
+	SetTimer(2.0, false, 'Reload');
+}
+function Reload()
+{
+	bIsReloading = false;
+	clips = clips - 1;
+	AmmoCount = 10;
+	ClearTimer();
+}
+
+function int AddAmmo( int Amount )
+{
+	if (Amount>0)
+	{
+		// se for positivo veio de um pickup
+		clips++;
+	}
+	else
+	{
+		// se for negativo, está atirando
+		super.AddAmmo(Amount);
+	}
+
+	return AmmoCount;
+}
+
+
+simulated function int GetClipsCount()
+{
+	return clips;
+}
+
+
+simulated function StartFire(byte FireModeNum)
+{
+	local PlayerController plr;
+	
+	if ( bWaitForCombo && (UTBot(Instigator.Controller) != None) )
+	{
+		if ( (ComboTarget == None) || ComboTarget.bDeleteMe )
+			bWaitForCombo = false;
+		else
+			return;
+	}
+	
+	
+	plr = PlayerController(Instigator.Controller);
+
+	if(plr == none || bIsReloading) //You can't shoot while reloading
+		return;
+		
+	Super.StartFire(FireModeNum);
+}
+
+
+//-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 //-----------------------------------------------------------------
 // AI InterFface
 function float GetAIRating()
@@ -80,6 +181,7 @@ function float SuggestAttackStyle()
 	return -0.4;
 }
 
+/*
 simulated function StartFire(byte FireModeNum)
 {
 	if ( bWaitForCombo && (UTBot(Instigator.Controller) != None) )
@@ -91,7 +193,7 @@ simulated function StartFire(byte FireModeNum)
 	}
 	Super.StartFire(FireModeNum);
 }
-
+*/
 function DoCombo()
 {
 	if ( bWaitForCombo )
@@ -305,6 +407,7 @@ simulated function PlayFireEffects( byte FireModeNum, optional vector HitLocatio
 	}
 }
 
+
 defaultproperties
 {
 	// Weapon SkeletalMesh
@@ -361,9 +464,10 @@ defaultproperties
 	FireOffset=(X=20,Y=5)
 	PlayerViewOffset=(X=17,Y=10.0,Z=-8.0)
 
-	AmmoCount=100
+	AmmoCount=10
 	LockerAmmoCount=200
 	MaxAmmoCount=200
+	clips = 10;
 
 	FireCameraAnim(1)=CameraAnim'Camera_FX.ShockRifle.C_WP_ShockRifle_Alt_Fire_Shake'
 
@@ -394,4 +498,9 @@ defaultproperties
 		Samples(0)=(LeftAmplitude=90,RightAmplitude=40,LeftFunction=WF_Constant,RightFunction=WF_LinearDecreasing,Duration=0.1200)
 	End Object
 	WeaponFireWaveForm=ForceFeedbackWaveformShooting1
+	
+	SomRecarregarArma = SoundCue'LateRedemptionCharSounds.GlockReload_Cue'
 }
+
+
+

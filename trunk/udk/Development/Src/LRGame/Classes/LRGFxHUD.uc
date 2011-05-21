@@ -6,8 +6,8 @@ var float LastHealthpc;
 
 //Create variables to hold references to the Flash MovieClips and Text Fields that will be modified
 var GFxObject Hora;
-var GFxObject qtdMunicaoArma;
-//var GFxObject log;
+var GFxObject qtdMunicaoArma, qtdMunicaoPenteAtivo, qtdMunicaoPenteReserva, imagemPenteReserva, mensagemCarregando;
+
 var UTGameReplicationInfo GRI;
 var WorldInfo ThisWorld;
 var GFxObject     CenterTextMC, CenterTextTF;
@@ -108,10 +108,21 @@ function Init(optional LocalPlayer LocPlay)
 	
 	Hora = GetVariableObject("_root.hora");
 	qtdMunicaoArma = GetVariableObject("_root.qtdMunicaoArma");
-	//log = GetVariableObject("_root.Log");
+	qtdMunicaoPenteAtivo = GetVariableObject("_root.qtdMunicaoPenteAtivo");
+	
 	CenterTextTF = GetVariableObject("_root.centerTextMC.centerText.textField");
 	CenterTextMC = GetVariableObject("_root.centerTextMC");
-	//LogMC.SetFloat("_yrotation", -15);
+	
+	qtdMunicaoPenteReserva = GetVariableObject("_root.qtdMunicaoPenteReserva");
+	imagemPenteReserva = GetVariableObject("_root.imagemPenteReserva");
+	mensagemCarregando = GetVariableObject("_root.mensagemCarregando");
+
+	hora.SetVisible(false);
+	
+	// esconde os pentes reservas
+	qtdMunicaoPenteReserva.SetVisible(false);
+	imagemPenteReserva.SetVisible(false);
+	
 }
 
 function LogMessage(String texto)
@@ -153,19 +164,23 @@ function AtualizarHora()
 
 function AtualizarMunicao(UTPawn UTP)
 {
-	local string info;
 	local int i;
-	local UTWeapon Weapon;
-	info = "1";
-	Weapon = UTWeapon(UTP.Weapon);
+	local int clips;
+	local UTWeap_Glock Weapon;
+	
+	Weapon = UTWeap_Glock(UTP.Weapon);
 	if (Weapon != none)
 	{
-		info = info$"2";
+		
 		i = Weapon.GetAmmoCount();
+		clips = Weapon.GetClipsCount();
 		qtdMunicaoArma.SetString("text",i$"");
+		qtdMunicaoPenteAtivo.SetString("text",clips$"");
+		
+		mensagemCarregando.SetVisible(Weapon.bIsReloading);
+
 	}
-	info = info$"3";
-	LogMessage(info);
+	
 }
 
 
@@ -210,7 +225,8 @@ function TickHUD() {
 	}
 
 
-	AtualizarHora();
+	//AtualizarHora();
+	
 	AtualizarMunicao(UTP);
 
 }
