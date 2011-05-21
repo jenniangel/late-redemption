@@ -28,7 +28,7 @@ DefaultProperties
  Acronym="LR"
 
  //The class for your playerController (created later)
- //PlayerControllerClass=class'ScaleformTutorial.STPlayerController'
+ PlayerControllerClass=class'LRGame.LRPlayerController'
 
  //The class for your GFx HUD Wrapper (created later)
  HUDType=class'LRGame.LRHUD'
