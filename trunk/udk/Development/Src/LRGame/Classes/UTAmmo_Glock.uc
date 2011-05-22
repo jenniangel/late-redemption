@@ -9,7 +9,7 @@ defaultproperties
 	MaxDesireability=0.28
 
 	Begin Object Name=AmmoMeshComp
-		StaticMesh=StaticMesh'Pickups.Ammo_Shock.Mesh.S_Ammo_ShockRifle'
+		StaticMesh=StaticMesh'CH_Butcher.Mesh.Shells2'
 		Translation=(X=0.0,Y=0.0,Z=-15.0)
 	End Object
 
