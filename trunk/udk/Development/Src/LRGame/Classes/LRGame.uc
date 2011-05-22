@@ -5,6 +5,11 @@ function BroadcastDeathMessage(Controller Killer, Controller Other, class<Damage
 	// Removendo mensagem de morte
 }
 
+static event class<GameInfo> SetGameType(string MapName, string Options, string Portal)
+{
+	return class 'LRGame.LRGame';
+}
+
 DefaultProperties
 {
 	//Indentify your GameInfo
@@ -14,7 +19,6 @@ DefaultProperties
 	DefaultPawnClass=class'LRGame.LRPawn'
 	DefaultInventory(0)=class'LRGame.UTWeap_Glock'
 
-	//The class for your GFx HUD Wrapper (created later)
 	HUDType=class'LRGame.LRHUD'
 
 	//This variable was created by Epic Games to allow back compatability with UIScenes
