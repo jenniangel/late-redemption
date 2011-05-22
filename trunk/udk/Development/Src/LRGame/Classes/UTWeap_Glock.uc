@@ -411,6 +411,8 @@ simulated function PlayFireEffects( byte FireModeNum, optional vector HitLocatio
 
 defaultproperties
 {
+	DroppedPickupClass = none
+	
 	// Weapon SkeletalMesh
 	Begin Object class=AnimNodeSequence Name=MeshSequenceA
 	End Object
