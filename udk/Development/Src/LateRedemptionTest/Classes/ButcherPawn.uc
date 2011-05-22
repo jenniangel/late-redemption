@@ -48,19 +48,19 @@ defaultproperties
    logactive = false;
    perceptionDistance = 5000
    attackDistance = 50
-   revengeTimer = 5
+   revengeTimer = 5 
    initialHealth = 100
    bCanPickupInventory = false
 
-   defaultMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
-   defaultAnimTree=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
-   defaultAnimSet(0)=AnimSet'CH_Zombie.Anims.Zombie_AnimSet'
-   defaultPhysicsAsset=PhysicsAsset'CH_Zombie.Mesh.SK_Zombie_Physics'
+   defaultMesh=SkeletalMesh'CH_Butcher.Mesh.Butcher'
+   defaultAnimTree=AnimTree'CH_Butcher.Anim.Butcher_AnimTree'
+   defaultAnimSet(0)=AnimSet'CH_Butcher.Anim.Butcher_Anim'
+   defaultPhysicsAsset=PhysicsAsset'CH_Butcher.Mesh.Butcher_Physics'
 
    Begin Object Name=WPawnSkeletalMeshComponent
-      SkeletalMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
-      AnimSets(0)=AnimSet'CH_Zombie.Anims.Zombie_AnimSet'
-      AnimTreeTemplate=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
+      SkeletalMesh=SkeletalMesh'CH_Butcher.Mesh.Butcher'
+      AnimSets(0)=AnimSet'CH_Butcher.Anim.Butcher_Anim'
+      AnimTreeTemplate=AnimTree'CH_Butcher.Anim.Butcher_AnimTree'
 
 
       bOwnerNoSee=false
