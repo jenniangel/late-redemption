@@ -3,7 +3,7 @@ class UTAmmo_Glock extends UTAmmoPickupFactory;
 defaultproperties
 {
 	RespawnTime=45
-	AmmoAmount=10
+	AmmoAmount=13
 	TargetWeapon=class'UTWeap_Glock'
 	PickupSound=SoundCue'A_Pickups.Ammo.Cue.A_Pickup_Ammo_Shock_Cue'
 	MaxDesireability=0.28

@@ -7,7 +7,7 @@ var bool bGammaCorrection;
 
 //Create variables to hold references to the Flash MovieClips and Text Fields that will be modified
 var GFxObject Hora;
-var GFxObject qtdMunicaoArma, qtdMunicaoPenteAtivo, qtdMunicaoPenteReserva, imagemPenteReserva, mensagemCarregando;
+var GFxObject qtdMunicaoArma, qtdMunicaoPenteAtivo, qtdMunicaoPenteReserva, imagemPenteReserva, mensagemCarregando, percentualVida;
 
 var UTGameReplicationInfo GRI;
 var WorldInfo ThisWorld;
@@ -107,6 +107,7 @@ function Init(optional LocalPlayer LocPlay)
 	ThisWorld = GetPC().WorldInfo;
 	GRI = UTGameReplicationInfo(ThisWorld.GRI);
 	
+	percentualVida = GetVariableObject("_root.percentualVida");
 	Hora = GetVariableObject("_root.hora");
 	qtdMunicaoArma = GetVariableObject("_root.qtdMunicaoArma");
 	qtdMunicaoPenteAtivo = GetVariableObject("_root.qtdMunicaoPenteAtivo");
@@ -229,6 +230,8 @@ function TickHUD() {
 	//AtualizarHora();
 	
 	AtualizarMunicao(UTP);
+	
+	percentualVida.SetString("text",UTP.Health$"%");
 
 }
 

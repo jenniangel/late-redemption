@@ -22,7 +22,7 @@ var  (LateRedemption) SoundCue SomRecarregarArma;
 
 
 //-------------------------------------------------------------------------
-// funcções para reload e clip
+// funções para reload e clip
 //-------------------------------------------------------------------------
 simulated function bool DoOverrideNextWeapon()
 {
@@ -37,13 +37,9 @@ simulated function WeaponEmpty()
 	if(clips > 0 && !bIsReloading)
 	{
 		bIsReloading = true;
-		//SetTimer(2.0, false, 'Reload');
 		AcionarReload();
 		return;
 	}
-	
-
-	//super.WeaponEmpty();
 }
 
 function AcionarReload()
@@ -54,8 +50,16 @@ function AcionarReload()
 function Reload()
 {
 	bIsReloading = false;
-	clips = clips - 1;
-	AmmoCount = clipSize;
+	if (clips - (clipSize-AmmoCount)>0)
+	{
+		clips = clips - (clipSize-AmmoCount);
+		AmmoCount = clipSize;
+	}
+	else
+	{
+		AmmoCount = AmmoCount + clips;
+		clips = 0;
+	}
 	ClearTimer();
 }
 
@@ -64,7 +68,7 @@ function int AddAmmo( int Amount )
 	if (Amount>0)
 	{
 		// se for positivo veio de um pickup
-		clips++;
+		clips=clips+Amount;
 	}
 	else
 	{
@@ -469,10 +473,10 @@ defaultproperties
 	PlayerViewOffset=(X=17,Y=10.0,Z=-8.0)
 
 	clipSize=13
-	AmmoCount=clipSize
+	AmmoCount=13
 	LockerAmmoCount=78
 	MaxAmmoCount=78
-	clips = 4
+	clips = 52
 
 	FireCameraAnim(1)=CameraAnim'Camera_FX.ShockRifle.C_WP_ShockRifle_Alt_Fire_Shake'
 
