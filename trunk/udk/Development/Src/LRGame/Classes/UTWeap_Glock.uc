@@ -10,6 +10,7 @@ var bool bRegisterTarget;
 var bool bWaitForCombo;
 var vector ComboStart;
 
+var int clipSize;
 var int clips;
 var bool bIsReloading;
 
@@ -54,7 +55,7 @@ function Reload()
 {
 	bIsReloading = false;
 	clips = clips - 1;
-	AmmoCount = 10;
+	AmmoCount = clipSize;
 	ClearTimer();
 }
 
@@ -432,15 +433,15 @@ defaultproperties
 		SkeletalMesh=SkeletalMesh'LateRedemptionMarshall.Mesh.Glock_mesh2'
 	End Object
 
-	InstantHitMomentum(0)=+60000.0
+	InstantHitMomentum(0)=+600.0
 
 	WeaponFireTypes(0)=EWFT_InstantHit
 	WeaponFireTypes(1)=EWFT_None // Desabilita o tiro com o botão direito do mouse.
 	//WeaponFireTypes(1)=EWFT_Projectile
 	//WeaponProjectiles(1)=class'UTProj_ShockBall'
 
-	InstantHitDamage(0)=45
-	FireInterval(0)=+0.77
+	InstantHitDamage(0)=20
+	FireInterval(0)=+0.33
 	FireInterval(1)=+0.6
 	InstantHitDamageTypes(0)=class'UTDmgType_ShockPrimary'
 	InstantHitDamageTypes(1)=None
@@ -467,10 +468,11 @@ defaultproperties
 	FireOffset=(X=20,Y=5)
 	PlayerViewOffset=(X=17,Y=10.0,Z=-8.0)
 
-	AmmoCount=10
-	LockerAmmoCount=200
-	MaxAmmoCount=200
-	clips = 10;
+	clipSize=13
+	AmmoCount=clipSize
+	LockerAmmoCount=78
+	MaxAmmoCount=78
+	clips = 4
 
 	FireCameraAnim(1)=CameraAnim'Camera_FX.ShockRifle.C_WP_ShockRifle_Alt_Fire_Shake'
 

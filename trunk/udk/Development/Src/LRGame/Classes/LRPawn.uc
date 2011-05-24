@@ -23,6 +23,8 @@ DefaultProperties
 
 	SoundGroupClass=class'UTPawnSoundGroup_Marshall'
 
+	CamOffset=(X=5.0,Y=8,Z=-13.0)
+
 	Begin Object Name=WPawnSkeletalMeshComponent
 		SkeletalMesh=SkeletalMesh'LateRedemptionMarshall.Mesh.Marshal3ds-7-4'
 		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
