@@ -86,26 +86,16 @@ function int getpercent(int val, int max) {
 
 //Called from STHUD'd PostBeginPlay()
 function Init(optional LocalPlayer LocPlay)
-//function Init(PlayerController PC)
 {
+
+	ThisWorld = GetPC().WorldInfo;
+	GRI = UTGameReplicationInfo(ThisWorld.GRI);
+
 	//Start and load the SWF Movie
 	Start();
 	Advance(0.f);
 
-	//Set the cahce value so that it will get updated on the first Tick
-	LastHealthpc = -1337;
-
 	//Load the references with pointers to the movieClips and text fields in the .swf
-	/*
-	HealthMC = GetVariableObject("_root.healthbar_mc");
-	HealthBarMC = GetVariableObject("_root.healthbar_mc.bar_mc");
-	HealthTF = GetVariableObject("_root.healthbar_mc.health_txt");
-	
-	LogMC = GetVariableObject("_root.log");
-	*/
-	
-	ThisWorld = GetPC().WorldInfo;
-	GRI = UTGameReplicationInfo(ThisWorld.GRI);
 	
 	percentualVida = GetVariableObject("_root.percentualVida");
 	Hora = GetVariableObject("_root.hora");
@@ -119,21 +109,14 @@ function Init(optional LocalPlayer LocPlay)
 	imagemPenteReserva = GetVariableObject("_root.imagemPenteReserva");
 	mensagemCarregando = GetVariableObject("_root.mensagemCarregando");
 
-	hora.SetVisible(false);
-	
-	// esconde os pentes reservas
+
+	// esconde os pentes reservas, hora e mensagem de reload
 	qtdMunicaoPenteReserva.SetVisible(false);
 	imagemPenteReserva.SetVisible(false);
+	Hora.SetVisible(false);
+	mensagemCarregando.SetVisible(false);
 	
 }
-
-function LogMessage(String texto)
-{
-    //`log(texto);
-	//GetPC().Worldinfo.Game.Broadcast(self, "ate aqui ok");
-	//log.SetString("text", texto);
-}
-
 
 static function string FormatTime(int Seconds)
 {
@@ -160,7 +143,7 @@ function AtualizarHora()
 	} 
 	else
 	{
-		Hora.SetString("text", "GRI é NONE");
+		Hora.SetVisible(false);
 	}
 }
 
@@ -182,7 +165,17 @@ function AtualizarMunicao(UTPawn UTP)
 		mensagemCarregando.SetVisible(Weapon.bIsReloading);
 
 	}
-	
+}
+
+function EsconderTudo()
+{
+	Hora.SetString("text","");
+	qtdMunicaoArma.SetString("text","");
+	qtdMunicaoPenteAtivo.SetString("text","");
+	qtdMunicaoPenteReserva.SetString("text","");
+	imagemPenteReserva.SetVisible(false);
+	mensagemCarregando.SetVisible(false);
+	percentualVida.SetString("text","");
 }
 
 
@@ -218,6 +211,7 @@ function TickHUD() {
 
 		if (UTV == None)
 		{
+			EsconderTudo();
 			return;
 		}
 		else if (UTVehicle_Hoverboard(UTV) != none)
@@ -226,13 +220,33 @@ function TickHUD() {
 		}
 	}
 
-
-	//AtualizarHora();
+	if (UTP != None)
+	{
 	
-	AtualizarMunicao(UTP);
+		if (!UTP.bPlayedDeath)
+		{
+			//AtualizarHora();
 	
-	percentualVida.SetString("text",UTP.Health$"%");
+			AtualizarMunicao(UTP);
+	
+			percentualVida.SetString("text",UTP.Health$"%");
+		}
+		else
+		{
+			EsconderTudo();
+		}
 
+	}
+	else
+	{
+		EsconderTudo();
+	}
+
+}
+
+function AddDeathMessage(PlayerReplicationInfo Killer, PlayerReplicationInfo Killed, class<UTDamageType> Dmg)
+{
+	EsconderTudo();
 }
 
 
