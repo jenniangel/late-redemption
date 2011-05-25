@@ -413,6 +413,11 @@ simulated function PlayFireEffects( byte FireModeNum, optional vector HitLocatio
 	}
 }
 
+simulated function bool ShouldRefire()
+{
+	EndFire(CurrentFireMode);
+	return false;
+}
 
 defaultproperties
 {
@@ -445,7 +450,7 @@ defaultproperties
 	//WeaponProjectiles(1)=class'UTProj_ShockBall'
 
 	InstantHitDamage(0)=20
-	FireInterval(0)=+0.33
+	FireInterval(0)=+0.20
 	FireInterval(1)=+0.6
 	InstantHitDamageTypes(0)=class'UTDmgType_ShockPrimary'
 	InstantHitDamageTypes(1)=None
