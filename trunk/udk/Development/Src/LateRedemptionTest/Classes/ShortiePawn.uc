@@ -56,17 +56,18 @@ defaultproperties
    revengeTimer = 5
    initialHealth = 100
    bCanPickupInventory = false
-   defaultMesh=SkeletalMesh'CH_IronGuard_Male.Mesh.SK_CH_IronGuard_MaleA'
-   defaultAnimTree=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
-   defaultAnimSet(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
-   defaultPhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
+   defaultMesh=SkeletalMesh'CH_Shortie.Mesh.SK_Shortie'
+   defaultAnimTree=AnimTree'CH_Shortie.Anims.Shortie_AnimTree'
+   defaultAnimSet(0)=AnimSet'CH_Shortie.Anims.SK_Shortie_Anims'
+   //defaultPhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
+   defaultPhysicsAsset=PhysicsAsset'CH_Shortie.Mesh.SK_Shortie_Physics'
    shortieAwake=SoundCue'A_Effort_EnigmaMean_LandHeavy_Cue'
    shortieAttack=SoundCue'A_Effort_EnigmaMean_PainMedium_Cue'
 
    Begin Object Name=WPawnSkeletalMeshComponent
-      SkeletalMesh=SkeletalMesh'CH_IronGuard_Male.Mesh.SK_CH_IronGuard_MaleA'
-      AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
-      AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
+      SkeletalMesh=SkeletalMesh'CH_Shortie.Mesh.SK_Shortie'
+      AnimSets(0)=AnimSet'CH_Shortie.Anims.SK_Shortie_Anims'
+      AnimTreeTemplate=AnimTree'CH_Shortie.Anims.Shortie_AnimTree'
 
 
       bOwnerNoSee=false
