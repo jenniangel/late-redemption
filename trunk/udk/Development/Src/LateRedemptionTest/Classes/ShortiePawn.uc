@@ -289,9 +289,7 @@ simulated event Tick(float DeltaTime)
          {
             if(seenPawn.Health > 5)      // Contact will kill player.
             {
-			seenPawn.TakeDamage( 5, none, seenPawn.Location, vect(0,0,0) , class'UTDmgType');
-      //         seenPawn.TakeDamage(5,none,none,none,none,none,none);
-            	//seenPawn.health -= 5;
+			   seenPawn.TakeDamage( 5, none, seenPawn.Location, vect(0,0,0) , class'UTDmgType_RanOver');
 			   self.PlaySound(shortieAttack, false, true);
             }
 			else
