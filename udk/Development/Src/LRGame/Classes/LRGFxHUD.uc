@@ -9,13 +9,21 @@ var bool bGammaCorrection;
 var GFxObject Hora;
 var GFxObject qtdMunicaoArma, qtdMunicaoPenteAtivo, qtdMunicaoPenteReserva, imagemPenteReserva, mensagemCarregando, percentualVida;
 
-var UTGameReplicationInfo GRI;
+var LRGameReplicationInfo GRI;
 var WorldInfo ThisWorld;
 var GFxObject     CenterTextMC, CenterTextTF;
 
 var array<MessageRow>   Messages, FreeMessages;
 var float               MessageHeight;
 var int                 NumMessages;
+
+var bool    badaladaMeiaNoite;
+var bool    badaladaUma;
+var bool    badaladaDuas;
+var bool    badaladaTres;
+
+var bool    escondeHora;
+var int     delayHora;
 
 function SetCenterText(string text)
 {
@@ -89,7 +97,8 @@ function Init(optional LocalPlayer LocPlay)
 {
 
 	ThisWorld = GetPC().WorldInfo;
-	GRI = UTGameReplicationInfo(ThisWorld.GRI);
+	GRI = LRGameReplicationInfo(ThisWorld.GRI);
+	
 
 	//Start and load the SWF Movie
 	Start();
@@ -113,7 +122,7 @@ function Init(optional LocalPlayer LocPlay)
 	// esconde os pentes reservas, hora e mensagem de reload
 	qtdMunicaoPenteReserva.SetVisible(false);
 	imagemPenteReserva.SetVisible(false);
-	Hora.SetVisible(false);
+	//Hora.SetVisible(false);
 	mensagemCarregando.SetVisible(false);
 	
 }
@@ -126,11 +135,9 @@ static function string FormatTime(int Seconds)
 	Hours = Seconds / 3600;
 	Seconds -= Hours * 3600;
 	Mins = Seconds / 60;
-	Seconds -= Mins * 60;
-	if (Hours > 0)
-		NewTimeString = ( Hours > 9 ? String(Hours) : "0"$String(Hours)) $ ":";
-	NewTimeString = NewTimeString $ ( Mins > 9 ? String(Mins) : "0"$String(Mins)) $ ":";
-	NewTimeString = NewTimeString $ ( Seconds > 9 ? String(Seconds) : "0"$String(Seconds));
+
+	NewTimeString = ( Hours > 9 ? String(Hours) : "0"$String(Hours)) $ ":";
+	NewTimeString = NewTimeString $ ( Mins > 9 ? String(Mins) : "0"$String(Mins));
 
 	return NewTimeString;
 }
@@ -139,7 +146,62 @@ function AtualizarHora()
 {
 	if ( GRI != None )
 	{
-		Hora.SetString("text", FormatTime(GRI.TimeLimit != 0 ? GRI.RemainingTime : GRI.ElapsedTime));
+
+		//SetCenterText(FormatTime(GRI.SegundosJogo())$" - "$GRI.ElapsedTime$", "$GRI.SegundosJogo());
+
+		// Quando identifica o início do tempo, mostra 00:00
+		if (badaladaMeiaNoite==false && GRI.contaTempo==true)
+		{
+			Hora.SetString("text", "00:00");
+			badaladaMeiaNoite=true;
+			escondeHora=true;
+			delayHora = GRI.ElapsedTime;
+		}
+
+		// Quando identifica uma da manhã, mostra 01:00
+		if (GRI.SegundosJogo()>=3600 && badaladaUma==false)
+		{
+			Hora.SetString("text", "01:00");
+			badaladaUma=true;
+			escondeHora=true;
+			delayHora = GRI.ElapsedTime;
+		}
+
+		// Quando identifica duas da manhã, mostra 02:00
+		if (GRI.SegundosJogo()>=7200 && badaladaDuas==false)
+		{
+			Hora.SetString("text", "02:00");
+			badaladaDuas=true;
+			escondeHora=true;
+			delayHora = GRI.ElapsedTime;
+		}
+
+		// Quando identifica três da manhã, mostra 03:00
+		if (GRI.SegundosJogo()>=10800 && badaladaTres==false)
+		{
+			Hora.SetString("text",  "03:00");
+			badaladaTres=true;
+			escondeHora=true;
+			delayHora = GRI.ElapsedTime;
+		}
+
+		// No final do tempo, mostra hora em tempo real
+		if (GRI.SegundosJogo()>=11000)
+		{
+			Hora.SetString("text",  FormatTime(GRI.SegundosJogo()));
+		}
+
+		// Quando indicar que é para esconder a hora
+		if (escondeHora==true)
+		{
+			// verifica se ficou 15 segundos aparecendo
+			if ((GRI.ElapsedTime-delayHora)>15)
+			{
+				// esconde a hora
+				Hora.SetString("text", "");
+				escondeHora=false;
+			}
+		}
 	} 
 	else
 	{
@@ -149,6 +211,7 @@ function AtualizarHora()
 
 function AtualizarMunicao(UTPawn UTP)
 {
+
 	local int i;
 	local int clips;
 	local UTWeap_Glock Weapon;
@@ -186,7 +249,7 @@ function TickHUD() {
 	local UTWeaponPawn UWP;
 	local PlayerController PC;
 	
-	GRI.ElapsedTime = 0;
+	//GRI.ElapsedTime = 0;
 
 	PC = GetPC();
 	
@@ -225,7 +288,7 @@ function TickHUD() {
 	
 		if (!UTP.bPlayedDeath)
 		{
-			//AtualizarHora();
+			AtualizarHora();
 	
 			AtualizarMunicao(UTP);
 	
@@ -260,4 +323,12 @@ DefaultProperties
 	
 	//Just put it in...
 	bGammaCorrection = false
+
+	badaladaMeiaNoite = false
+	badaladaUma = false
+	badaladaDuas = false
+	badaladaTres = false
+
+	escondeHora = false
+	delayHora = 0;
 }

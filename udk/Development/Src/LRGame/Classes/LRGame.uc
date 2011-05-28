@@ -18,6 +18,9 @@ DefaultProperties
 	PlayerControllerClass=class'LRGame.LRPlayerController'
 	DefaultPawnClass=class'LRGame.LRPawn'
 	DefaultInventory(0)=class'LRGame.UTWeap_Glock'
+	
+	// Obtém classe LR para o GRI
+	GameReplicationInfoClass=class'LRGame.LRGameReplicationInfo'
 
 	HUDType=class'LRGame.LRHUD'
 
