@@ -13,6 +13,11 @@ var LRGameReplicationInfo GRI;
 var WorldInfo ThisWorld;
 var GFxObject     CenterTextMC, CenterTextTF;
 
+var GFxObject     HudVida100, HudVida5, HudVida10, HudVida15, HudVida20, 
+				  HudVida25, HudVida30, HudVida35, HudVida40, HudVida45, 
+				  HudVida50, HudVida55, HudVida60, HudVida65, HudVida70, 
+				  HudVida75, HudVida80, HudVida85, HudVida90, HudVida95;
+
 var array<MessageRow>   Messages, FreeMessages;
 var float               MessageHeight;
 var int                 NumMessages;
@@ -114,6 +119,30 @@ function Init(optional LocalPlayer LocPlay)
 	CenterTextTF = GetVariableObject("_root.centerTextMC.centerText.textField");
 	CenterTextMC = GetVariableObject("_root.centerTextMC");
 	
+	
+	HudVida5 = GetVariableObject("_root.vida5");
+	HudVida10 = GetVariableObject("_root.vida10");
+	HudVida15 = GetVariableObject("_root.vida15");
+	HudVida20 = GetVariableObject("_root.vida20");
+	HudVida25 = GetVariableObject("_root.vida25");
+	HudVida30 = GetVariableObject("_root.vida30");
+	HudVida35 = GetVariableObject("_root.vida35");
+	HudVida40 = GetVariableObject("_root.vida40");
+	HudVida45 = GetVariableObject("_root.vida45");
+	HudVida50 = GetVariableObject("_root.vida50");
+	HudVida55 = GetVariableObject("_root.vida55");
+	HudVida60 = GetVariableObject("_root.vida60");
+	HudVida65 = GetVariableObject("_root.vida65");
+	HudVida70 = GetVariableObject("_root.vida70");
+	HudVida75 = GetVariableObject("_root.vida75");
+	HudVida80 = GetVariableObject("_root.vida80");
+	HudVida85 = GetVariableObject("_root.vida85");
+	HudVida90 = GetVariableObject("_root.vida90");
+	HudVida95 = GetVariableObject("_root.vida95");
+	HudVida100 = GetVariableObject("_root.vida100");
+
+	EsconderTodasCamadasVida();
+	
 	qtdMunicaoPenteReserva = GetVariableObject("_root.qtdMunicaoPenteReserva");
 	imagemPenteReserva = GetVariableObject("_root.imagemPenteReserva");
 	mensagemCarregando = GetVariableObject("_root.mensagemCarregando");
@@ -140,6 +169,31 @@ static function string FormatTime(int Seconds)
 	NewTimeString = NewTimeString $ ( Mins > 9 ? String(Mins) : "0"$String(Mins));
 
 	return NewTimeString;
+}
+
+function EsconderTodasCamadasVida()
+{
+	
+	HudVida5.SetVisible(false);
+	HudVida10.SetVisible(false);
+	HudVida15.SetVisible(false);
+	HudVida20.SetVisible(false);
+	HudVida25.SetVisible(false);
+	HudVida30.SetVisible(false);
+	HudVida35.SetVisible(false);
+	HudVida40.SetVisible(false);
+	HudVida45.SetVisible(false);
+	HudVida50.SetVisible(false);
+	HudVida55.SetVisible(false);
+	HudVida60.SetVisible(false);
+	HudVida65.SetVisible(false);
+	HudVida70.SetVisible(false);
+	HudVida75.SetVisible(false);
+	HudVida80.SetVisible(false);
+	HudVida85.SetVisible(false);
+	HudVida90.SetVisible(false);
+	HudVida95.SetVisible(false);
+	HudVida100.SetVisible(false);
 }
 
 function AtualizarHora()
@@ -293,6 +347,52 @@ function TickHUD() {
 			AtualizarMunicao(UTP);
 	
 			percentualVida.SetString("text",UTP.Health$"%");
+			
+			// Esconde todos as camadas vermelhas
+			EsconderTodasCamadasVida();
+
+			// mostra a que tem o alfa correspondente a vida
+			if (UTP.Health>=95)
+				HudVida100.SetVisible(true);
+			else if (UTP.Health>=90)
+				HudVida95.SetVisible(true);
+			else if (UTP.Health>=85)
+				HudVida90.SetVisible(true);
+			else if (UTP.Health>=80)
+				HudVida85.SetVisible(true);
+			else if (UTP.Health>=75)
+				HudVida80.SetVisible(true);
+			else if (UTP.Health>=70)
+				HudVida75.SetVisible(true);
+			else if (UTP.Health>=65)
+				HudVida70.SetVisible(true);
+			else if (UTP.Health>=60)
+				HudVida65.SetVisible(true);
+			else if (UTP.Health>=55)
+				HudVida60.SetVisible(true);
+			else if (UTP.Health>=50)
+				HudVida55.SetVisible(true);
+			else if (UTP.Health>=45)
+				HudVida50.SetVisible(true);
+			else if (UTP.Health>=40)
+				HudVida45.SetVisible(true);
+			else if (UTP.Health>=35) 
+				HudVida40.SetVisible(true);
+			else if (UTP.Health>=30) 
+				HudVida35.SetVisible(true);
+			else if (UTP.Health>=25) 
+				HudVida30.SetVisible(true);
+			else if (UTP.Health>=20) 
+				HudVida25.SetVisible(true);
+			else if (UTP.Health>=15) 
+				HudVida20.SetVisible(true);
+			else if (UTP.Health>=10)
+				HudVida15.SetVisible(true);
+			else if (UTP.Health>=5) 
+				HudVida10.SetVisible(true);
+			else
+				HudVida5.SetVisible(true);
+
 		}
 		else
 		{
