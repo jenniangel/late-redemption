@@ -293,6 +293,7 @@ function EsconderTudo()
 	imagemPenteReserva.SetVisible(false);
 	mensagemCarregando.SetVisible(false);
 	percentualVida.SetString("text","");
+	EsconderTodasCamadasVida();
 }
 
 
