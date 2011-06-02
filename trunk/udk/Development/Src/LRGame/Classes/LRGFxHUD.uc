@@ -240,9 +240,22 @@ function AtualizarHora()
 		}
 
 		// No final do tempo, mostra hora em tempo real
-		if (GRI.SegundosJogo()>=11000)
+		//if (GRI.SegundosJogo()>=11000)
+		//{
+		//	Hora.SetString("text",  FormatTime(GRI.SegundosJogo()));
+		//}
+
+		// QUando o GRI manda, tem que mostrar a hora!
+		if (GRI.mostrarHora==true)
 		{
-			Hora.SetString("text",  FormatTime(GRI.SegundosJogo()));
+			Hora.SetString("text", FormatTime(GRI.SegundosJogo()));
+		}
+		else
+		{
+			if (escondeHora==false)
+			{
+				Hora.SetString("text", "");
+			}
 		}
 
 		// Quando indicar que é para esconder a hora
