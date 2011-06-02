@@ -3,6 +3,7 @@ class LRGameReplicationInfo extends GameReplicationInfo
 	config(Game);
 
 var bool contaTempo;    // se true, inicia contagem de tempo
+var bool mostrarHora;    // se true, inicia contagem de tempo
 
 // controla quais badaladas já executaram
 var bool jaTocouUma;
@@ -91,5 +92,6 @@ defaultproperties
 	delayToque = 0;
 
 	contaTempo = false;
+	mostrarHora = false;
 }
 
