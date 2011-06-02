@@ -10,6 +10,49 @@ static event class<GameInfo> SetGameType(string MapName, string Options, string 
 	return class 'LRGame.LRGame';
 }
 
+/*
+ * Restaura a vida de todos os inimigos vivos.
+ * */
+function restoreEnemiesHealth() {
+	local ShortiePawn shortie;
+	local ScreamerPawn screamer;
+	local ButcherPawn butcher;
+	local CrusherPawn crusher;
+ 
+	foreach AllActors(class 'LateRedemptionTest.ShortiePawn', shortie)
+	{
+		if (shortie.Health != shortie.initialHealth) {
+			shortie.Health = shortie.initialHealth;
+		}
+	}
+
+	foreach AllActors(class 'LateRedemptionTest.ScreamerPawn', screamer)
+	{
+		if (screamer.Health != screamer.initialHealth) {
+			screamer.Health = screamer.initialHealth;
+		}
+	}
+
+	foreach AllActors(class 'LateRedemptionTest.ButcherPawn', butcher)
+	{
+		if (butcher.Health != butcher.initialHealth) {
+			butcher.Health = butcher.initialHealth;
+		}
+	}
+
+	foreach AllActors(class 'LateRedemptionTest.CrusherPawn', crusher)
+	{
+		if (crusher.Health != crusher.initialHealth) {
+			crusher.Health = crusher.initialHealth;
+		}
+	}
+}
+
+function RestartPlayer(Controller aPlayer) {
+	restoreEnemiesHealth();
+	super.RestartPlayer(aPlayer);
+}
+
 DefaultProperties
 {
 	//Indentify your GameInfo
