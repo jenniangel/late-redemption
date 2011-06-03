@@ -15,7 +15,6 @@ var int delayToque; // usada para saber quanto tempo o toque está dando
 
 var  (LateRedemption) SoundCue SomBadalada;
 
-
 // função que faz a contagem do tempo
 simulated event Timer()
 {
