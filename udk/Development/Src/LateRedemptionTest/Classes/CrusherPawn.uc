@@ -45,16 +45,19 @@ var (LateRedemption) SoundCue crusherAwake;    // Sound: see Marshall
 defaultproperties
 {
    minGroundSpeed = 100;
-   maxGroundSpeed = 900;
+   maxGroundSpeed = 800;
    AnimSetName = "ATTACK"
    AttAcking = false
    logactive = false;
-   perceptionDistance = 5000
-   attackDistance = 50
+   perceptionDistance = 200
+   attackDistance = 100
    revengeTimer = 5
-   initialHealth = 100
+   initialHealth = 500
    crusherAwaking = false
    bCanPickupInventory = false
+   collisiontype = COLLIDE_BlockAll
+   BlockRigidBody=true
+   Physics = PHYS_Walking
 
    defaultMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
    defaultAnimTree=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
@@ -65,7 +68,6 @@ defaultproperties
       SkeletalMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
       AnimSets(0)=AnimSet'CH_Zombie.Anims.Zombie_AnimSet'
       AnimTreeTemplate=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
-
 
       bOwnerNoSee=false
       CastShadow=true
@@ -81,9 +83,9 @@ defaultproperties
    mesh = WPawnSkeletalMeshComponent
 
    Begin Object Name=CollisionCylinder
-      CollisionRadius=+0015.000000
-      CollisionHeight=+0044.000000
-      BlockZeroExtent=false
+      CollisionRadius=+0020.000000
+      CollisionHeight=+0065.000000
+      BlockZeroExtent=true
    End Object
    CylinderComponent=CollisionCylinder
    CollisionComponent=CollisionCylinder

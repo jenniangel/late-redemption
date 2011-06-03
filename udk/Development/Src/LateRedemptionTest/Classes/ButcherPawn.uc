@@ -11,8 +11,8 @@ var PhysicsAsset defaultPhysicsAsset;          // Custom Mesh member
 var MaterialInterface defaultMaterial0;        // Custom Mesh member
 var Name AnimSetName;
 
-const DEFAULTMAXGROUNDSPEED=900;
-const DEFAULTMINGROUNDSPEED=100;
+const DEFAULTMAXGROUNDSPEED=800;
+const DEFAULTMINGROUNDSPEED=80;
 
 var ButcherController myController;         // Butcher IA Controller
 var float tickCounter;                      // Timing variable
@@ -41,16 +41,19 @@ defaultproperties
 //---------------let's give them a default value--------------------
 //==================================================================
 {
-   minGroundSpeed = 100;
-   maxGroundSpeed = 900;
+   minGroundSpeed = 80;
+   maxGroundSpeed = 800;
    AnimSetName = "ATTACK"
    AttAcking = false
    logactive = false;
-   perceptionDistance = 5000
+   perceptionDistance = 800
    attackDistance = 50
    revengeTimer = 5 
-   initialHealth = 100
+   initialHealth = 230
    bCanPickupInventory = false
+   collisiontype = COLLIDE_BlockAll
+   BlockRigidBody=true
+   Physics = PHYS_Walking
 
    defaultMesh=SkeletalMesh'CH_Butcher.Mesh.Butcher'
    defaultAnimTree=AnimTree'CH_Butcher.Anim.Butcher_AnimTree'
@@ -78,8 +81,8 @@ defaultproperties
 
    Begin Object Name=CollisionCylinder
       CollisionRadius=+0015.000000
-      CollisionHeight=+0044.000000
-      BlockZeroExtent=false
+      CollisionHeight=+0051.000000
+      BlockZeroExtent=true
    End Object
    CylinderComponent=CollisionCylinder
    CollisionComponent=CollisionCylinder
