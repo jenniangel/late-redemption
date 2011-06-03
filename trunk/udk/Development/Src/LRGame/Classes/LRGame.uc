@@ -1,5 +1,6 @@
 class LRGame extends UTGame;
 
+var bool firstSpawn;
 var bool showingTime;
 
 function BroadcastDeathMessage(Controller Killer, Controller Other, class<DamageType> damageType)
@@ -19,8 +20,13 @@ static event class<GameInfo> SetGameType(string MapName, string Options, string 
 function AdjustTimeAfterDeath() {
 	local LRGameReplicationInfo GRI;
 	GRI = LRGameReplicationInfo(GameReplicationInfo);
-	if (GRI.contaTempo) {
+	if (firstSpawn) {
+		// Se for o primeiro spawn, não faz nada
+		firstSpawn = false;
+	} else {
+		// Se é um Spawn após uma morte, adianta o tempo e retorna a contagem, que havia parado na morte em LRPawn
 		GRI.ElapsedTime += 56;
+		GRI.contaTempo = true;
 		GRI.mostrarHora = true;
 		showingTime = true;
 		SetTimer(5, false);
@@ -81,13 +87,21 @@ function RestoreEnemiesHealth() {
 function RestartPlayer(Controller aPlayer) {
 	RestoreEnemiesHealth();
 	super.RestartPlayer(aPlayer);
-	AdjustTimeAfterDeath();
+	
+	// Desconsidera classes diferentes de LRPlayerController
+	// FIXME: Provavelmente este cast gera um erro, e qualquer coisa abaixo dele não deve rodar
+	if (LRPlayerController(aPlayer) != none) {
+		// Ajusta o tempo de jogo ao reviver o personagem
+		AdjustTimeAfterDeath();
+	}
 }
 
 DefaultProperties
 {
 	//Indentify your GameInfo
 	Acronym="LR"
+
+	firstSpawn = true;
 
 	PlayerControllerClass=class'LRGame.LRPlayerController'
 	DefaultPawnClass=class'LRGame.LRPawn'

@@ -13,6 +13,20 @@ simulated function SetCharacterClassFromInfo(class<UTFamilyInfo> Info)
 	Mesh.SetAnimTreeTemplate(defaultAnimTree);
 }
 
+/**
+ * Faz o tempo parar de contar quando o jogador morre. 
+ **/
+simulated State Dying
+{
+	event BeginState(Name PreviousStateName) {
+		local LRGameReplicationInfo GRI;
+		GRI = LRGameReplicationInfo(WorldInfo.GRI);
+		GRI.contaTempo = false;
+		super.BeginState(PreviousStateName);
+	}
+
+}
+
 DefaultProperties
 {
 
