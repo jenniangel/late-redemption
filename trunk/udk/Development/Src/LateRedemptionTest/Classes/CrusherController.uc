@@ -367,7 +367,7 @@ state FollowPath
             if (MoveTarget != none)
             {
                //SetRotation(RInterpTo(Rotation,Rotator(MoveTarget.Location),Delta,90000,true));
-               MoveToward(MoveTarget, thePlayer);
+               MoveToward(MoveTarget, MoveTarget);
             }
          }
          Sleep(2);

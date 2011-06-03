@@ -50,13 +50,15 @@ defaultproperties
    AnimSetName = "ATTACK"
    AttAcking = false
    logactive = false;
-   perceptionDistance = 6000
+   perceptionDistance = 800
    attackDistance = 400
    revengeTimer = 5
-   initialHealth = 100
+   initialHealth = 200
    firingRate = 1.0
    idleTime = 10
    bCanPickupInventory = false
+   collisiontype = COLLIDE_BlockAll
+   BlockRigidBody=true
 
    defaultMesh=SkeletalMesh'CH_Screamer.Mesh.SK_Screamer'
    defaultAnimTree=AnimTree'CH_Screamer.Anims.AnimTree_Screamer'
@@ -85,7 +87,7 @@ defaultproperties
    Begin Object Name=CollisionCylinder
       CollisionRadius=+0015.000000
       CollisionHeight=+0044.000000
-      BlockZeroExtent=false
+      BlockZeroExtent=true
    End Object
    CylinderComponent=CollisionCylinder
    CollisionComponent=CollisionCylinder

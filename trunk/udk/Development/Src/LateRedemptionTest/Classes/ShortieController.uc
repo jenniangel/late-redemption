@@ -8,9 +8,7 @@ var Pawn thePlayer;                // Player - must die...
 
 var Name AnimSetName;
 
-var bool  followingPath;          // Movement is ongoing
 var float distanceToPlayer;       // No comments...
-var Float IdleInterval;
 
 //------------------------------------------------------------------
 // Variables you get directly from the ShortiePawn Class
@@ -27,8 +25,6 @@ var float attackDistance;         // Anything within this radio dies
 defaultproperties
 {
    AnimSetName ="ATTACK"
-   followingPath = true
-   IdleInterval = 2.5f
 }
 
 
@@ -101,6 +97,11 @@ function Possess(Pawn aPawn, bool bVehicleTransition)
 // request towards the Pawn Class to increase its speed (revenge
 // timer and attack sub-states are triggered here) and change 
 // the internal state value.
+// Also, this function is broadcasted to the other Shortie group
+// members whenever one member of the group is hit (the boolean
+// variable hitFromPlayer indicates whether the activation was
+// unleashed by the player itself or if it is a message being 
+// broadcasted by the poor Shortie which has just been hit.
 //------------------------------------------------------------------
 function NotifyTakeHit1(bool hitFromPLayer)
 {
@@ -108,7 +109,12 @@ function NotifyTakeHit1(bool hitFromPLayer)
    thePlayer = GetALocalPlayerController().Pawn;
 
    distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
-   myShortie.SetPlayerVisible(true);
+
+   if (hitFromPlayer)
+   {
+      myShortie.SetPlayerVisible(true,true);  // Inform other shorties
+   }
+
    GotoState('Pursuit');                      // Go after Player
 }
 
@@ -116,11 +122,16 @@ function NotifyTakeHit1(bool hitFromPLayer)
 
 //------------------------------------------------------------------
 //------------------------------State = IDLE------------------------
-// In this state, the Shortie will wait for a while (IdleInterval)
-// and in case Player is not visible, it will start a patrol.
-// (To be implemented in phase-2).
-// This is the default state - the one triggered after the 
-// Shortie is possessed.
+// In this state, the Shortie will keep waiting till Player is 
+// visible and this is the default state - the one triggered after  
+// the Shortie is possessed.
+// If in this state, the Player is seen, an information will be sent
+// to the other group members (remember, the shorties attack in 
+// a group of 3, in general) towards function SetPlayerVisible so
+// that the other members of this group will be warned that
+// one of the Shorties in the group has been awaken.
+// This activates the groupattack propriety on the other Shorties 
+// of this group and the Group Attack is coordinated.
 //------------------------------------------------------------------
 auto state Idle
 {
@@ -133,7 +144,7 @@ auto state Idle
          distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
          if (distanceToPlayer < perceptionDistance)
          { 
-            myShortie.SetPlayerVisible(true);
+            myShortie.SetPlayerVisible(true,true);  // Inform other shorties
             GotoState('Pursuit');
          }
       }
@@ -142,7 +153,6 @@ auto state Idle
    Begin:
       LogMessage("State ShortieController Idle");
       Pawn.Acceleration = vect(0,0,0);
-      Sleep(IdleInterval);
 }
 
 
@@ -231,7 +241,6 @@ state Attack
    Begin:
       LogMessage("State ShortieController Attack");
       myShortie.SetAttacking(true);
-  //  Pawn.Acceleration = vect(0,0,0);
 
       while(true && thePlayer.Health > 0)
       {   
