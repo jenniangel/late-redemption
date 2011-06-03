@@ -1,5 +1,7 @@
 class LRGame extends UTGame;
 
+var bool showingTime;
+
 function BroadcastDeathMessage(Controller Killer, Controller Other, class<DamageType> damageType)
 {
 	// Removendo mensagem de morte
@@ -11,9 +13,37 @@ static event class<GameInfo> SetGameType(string MapName, string Options, string 
 }
 
 /*
+ * Função utilizada para reduzir o tempo do jogo em 10 minutos 
+ * (considerando 3h33) a cada vez que o jogador morre.
+ * */
+function AdjustTimeAfterDeath() {
+	local LRGameReplicationInfo GRI;
+	GRI = LRGameReplicationInfo(GameReplicationInfo);
+	if (GRI.contaTempo) {
+		GRI.ElapsedTime += 56;
+		GRI.mostrarHora = true;
+		showingTime = true;
+		SetTimer(5, false);
+	}
+}
+
+/*
+ * Esconde o tempo mostrado no HUD.
+ * */
+function Timer()
+{
+	local LRGameReplicationInfo GRI;
+	if (showingTime) {
+		GRI = LRGameReplicationInfo(GameReplicationInfo);
+		GRI.mostrarHora = false;
+		showingTime = false;
+	}
+}
+
+/*
  * Restaura a vida de todos os inimigos vivos.
  * */
-function restoreEnemiesHealth() {
+function RestoreEnemiesHealth() {
 	local ShortiePawn shortie;
 	local ScreamerPawn screamer;
 	local ButcherPawn butcher;
@@ -49,8 +79,9 @@ function restoreEnemiesHealth() {
 }
 
 function RestartPlayer(Controller aPlayer) {
-	restoreEnemiesHealth();
+	RestoreEnemiesHealth();
 	super.RestartPlayer(aPlayer);
+	AdjustTimeAfterDeath();
 }
 
 DefaultProperties
