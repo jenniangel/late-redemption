@@ -164,7 +164,8 @@ function DrawTransition(Canvas Canvas)
 			HintMessage = LoadRandomLocalizedHintMessage( string( class'UTDeathmatch'.Name ), GameClassName);
 			if( Len( HintMessage ) > 0 )
 			{
-				class'Engine'.static.AddOverlayWrapped( LoadingScreenHintMessageFont, HintMessage, 0.1822, 0.585, 1.0, 1.0, 0.7 );
+				// Comentado por Cesar em 07/06/2011 para não dar mensagens de ajuda nas telas de loading
+				//class'Engine'.static.AddOverlayWrapped( LoadingScreenHintMessageFont, HintMessage, 0.1822, 0.585, 1.0, 1.0, 0.7 );
 			}
 		}
 	}
