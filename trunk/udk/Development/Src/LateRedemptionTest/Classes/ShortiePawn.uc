@@ -52,7 +52,7 @@ defaultproperties
    AnimSetName = "ATTACK"
    AttAcking = false
    logactive = false;
-   perceptionDistance = 400
+   perceptionDistance = 1000
    attackDistance = 25
    revengeTimer = 5
    initialHealth = 120
