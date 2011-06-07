@@ -13,13 +13,16 @@ var Name AnimSetName;             // Just overwrite parent value.
 
 var float distanceToPlayer;       // No comments...
 var Float IdleInterval;
+var Float heartTime;
+var int initialHealth;            // Initial Health
 var int shotsOnHeartCount;        // Counter of Number of Shots on Heart
 var int maxShotsOnHeart;          // Number of Shots on Heart to kill
 
 //------------------------------------------------------------------
 // Variables you get directly from the DiabolusPawn Class
 //------------------------------------------------------------------
-var float HandAttackDistance;     // Anything within this radio dies
+var int heartHealth;              // My real vital force...
+var int handAttackDistance;       // Anything within this radio dies
                                   // by my clawns. Outside, by fire!
 
 
@@ -29,7 +32,8 @@ var float HandAttackDistance;     // Anything within this radio dies
 //==================================================================
 defaultproperties
 {
-   AnimSetName ="ATTACK"
+   AnimSetName ="ATTACK";
+   heartHealth = 200;
 }
 
 
@@ -64,8 +68,11 @@ function SetPawn(DiabolusPawn NewPawn)
    Possess(myDiabolus, false);
    myDiabolus.SetFireAttacking(false);
    myDiabolus.SetHandAttacking(false);
-   HandAttackDistance = myDiabolus.handAttackDistance;
+   handAttackDistance = myDiabolus.handAttackDistance;
+   heartHealth = myDiabolus.heartHealth;
    IdleInterval = myDiabolus.idleTime;
+   heartTime = myDiabolus.heartTime;
+   initialHealth = myDiabolus.initialHealth;
 }
 
 
@@ -105,20 +112,28 @@ function Possess(Pawn aPawn, bool bVehicleTransition)
 // Also this is the momment to stop attacking (if attack is ongoing)
 // in order to restart it latter on (eventually in the fury mode).
 //------------------------------------------------------------------
-function NotifyTakeHit1()
+function NotifyTakeHit1(int damage)
 {
    LogMessage("Event DiabolusController NotifyTakeHit");
    thePlayer = GetALocalPlayerController().Pawn;
+
+   if (myDiabolus.Health < (initialHealth/5))  // 10% of initial health.
+      GotoState('HealMe');
+   else
+   {
+
    distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
 
-   if (distanceToPlayer < HandAttackDistance)
+   if (distanceToPlayer < handAttackDistance)
    { 
-       GotoState('AttackHand');
-    }
-    else
-	{
-		GotoState('AttackFire');
-	 }
+      GotoState('AttackHand');
+   }
+   else
+   {
+      myDiabolus.SetFireAttacking(false);    // Set to false to enable fury state
+      GotoState('AttackFire');
+   }
+   }
 }
 
 
@@ -141,20 +156,22 @@ auto state Idle
       if( PlayerController(thePlayer.Controller) != none )
       {
          distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
-         if (distanceToPlayer < HandAttackDistance)
+         if (distanceToPlayer < handAttackDistance)
          { 
             GotoState('AttackHand');
          }
-		 else
-		 {
-			GotoState('AttackFire');
-		 }
+         else
+         {
+            GotoState('AttackFire');
+         }
       }
    }
 
    Begin:
+//      ignores SeePlayer;
       LogMessage("State DiabolusController Idle");
       Sleep(IdleInterval);
+//      enables(SeePlayer);  
 }
 
 
@@ -166,8 +183,8 @@ auto state Idle
 // in fact a Attack Sub-state) it means that Player is under 
 // Diabolus's fireballs range. Hunting season has just begun...
 // If the player is able to escape from Diabolus's fire sight (either
-// by hiding himself or by fleeing), Diabolus state will be moved 
-// back to Pursuit.
+// by hiding himself or by fleeing)... Ops, in the library, there is
+// No way to escape from Diabolus fire sight huahaha...
 //------------------------------------------------------------------
 state AttackFire
 {
@@ -176,14 +193,12 @@ state AttackFire
       myDiabolus.SetHandAttacking(false);
       myDiabolus.ZeroMovementVariables();
       MoveToward(thePlayer, thePlayer, 10000);
-//      Sleep(0.2);
       myDiabolus.SetFireAttacking(true);
-//      Sleep(0.2);
 
       while(true && thePlayer.Health > 0)
       {   
          distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
-         if (distanceToPlayer < HandAttackDistance)
+         if (distanceToPlayer < handAttackDistance)
          { 
             GotoState('AttackHand');
             break;
@@ -213,14 +228,13 @@ state AttackHand
    Begin:
       LogMessage("State DiabolusController AttackHand");
       myDiabolus.SetFireAttacking(false);
- //     Sleep(1.0);
       myDiabolus.ZeroMovementVariables();
       MoveToward(thePlayer, thePlayer, 10000);
       myDiabolus.SetHandAttacking(true);
       while(true && thePlayer.Health > 0)
       {   
          distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
-         if (distanceToPlayer > HandAttackDistance)
+         if (distanceToPlayer > handAttackDistance)
          { 
             myDiabolus.SetHandAttacking(false);
             GotoState('AttackFire');
@@ -235,6 +249,24 @@ state AttackHand
 }
 
 
+//------------------------------------------------------------------
+//------------------------------State = AttackHand------------------
+state HealMe
+{
+   function NotifyTakeHit1(int damage)
+   {
+      heartHealth = heartHealth - damage;
+      if (heartHealth <= 0)
+         GotoState('Dying');
+   }
 
 
-
+   Begin:
+      myDiabolus.SetFireAttacking(false);
+      myDiabolus.SetHeartTime(true);
+      Sleep(heartTime);
+      myDiabolus.SetHeartTime(false);
+      myDiabolus.Health = myDiabolus.initialHealth;
+      GotoState('Idle');
+   
+}

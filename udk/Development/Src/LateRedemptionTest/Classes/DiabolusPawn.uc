@@ -1,7 +1,3 @@
-                                                                     
-                                                                     
-                                                                     
-                                             
 class DiabolusPawn extends UTPawn
 placeable;                           // Available in Content Browser
 
@@ -17,10 +13,11 @@ var Name AnimSetName;
 
 var DiabolusController myController;        // Diabolus IA Controller
 var float tickCounter;                      // Timing variable
-var int reduceFuryTimer;                   // Timing variable
+var int reduceFuryTimer;                    // Timing variable
 var int changeSpeed;                        // Change fury states
 var bool FireAttAcking;                     // Flag to indicate state
 var bool HandAttAcking;                     // Flag to indicate state
+var bool knockDown;                         // Flag to indicate state
 var bool AttAcking;                         // Flag to indicate state
 var DiabolusWeapon weaponDiab;
 
@@ -30,10 +27,12 @@ var DiabolusWeapon weaponDiab;
 // just by pressing F4 over a DiabolusPawn monster.
 //------------------------------------------------------------------
 var (LateRedemption) bool logactive;           // Turn debug on-off
-var (LateRedemption) float handAttackDistance; // Distance to start punches.
+var (LateRedemption) int handAttackDistance;   // Distance to start punches.
+var (LateRedemption) int heartHealth;          // Health from the Heart.
 var (LateRedemption) int revengeTimer;         // Fury time in seconds
 var (LateRedemption) int initialHealth;        // Initial Health
 var (LateRedemption) int idleTime;             // Time to Start Move
+var (LateRedemption) int heartTime;            // Time to Start Move
 var (LateRedemption) float firingRate;         // Time till next fire
 var (LateRedemption) SoundCue diabolusFireAttack;  // Sound when attack by Fire
 var (LateRedemption) SoundCue diabolusHandAttack;  // Sound when attack by Hand
@@ -49,11 +48,16 @@ defaultproperties
    AnimSetName = "ATTACK"
    FireAttAcking = false
    HandAttAcking = false
+   KnockDown = false
    AttAcking = false
    groundSpeed = 0
    logactive = false;
+   initialHealth = 200
+   handAttackDistance = 600
    revengeTimer = 5
-   initialHealth = 400
+   heartHealth = 400
+   idleTime = 5
+   heartTime = 3
    firingRate = 1.0
    bCanPickupInventory = false
    DrawScale = 1.0
@@ -205,6 +209,38 @@ function SetHandAttacking(bool atacar)
       }
    }
 }
+//------------------------------------------------------------------
+//------------------------------------------------------------------
+function SetHeartTime(bool knockout)
+{
+   local NavigationPoint spawnPoint;
+
+   if (KnockDown != knockout)
+   {
+      knockDown = knockout;
+	  AttAcking = knockout;
+      if (knockout)
+      {
+         if (RandRange(1,2) > 1.5)
+         {
+            spawnPoint = spawnPoint1;
+         }
+         else
+         {
+            spawnPoint = spawnPoint2;
+         }
+
+         if (RandRange(1,2) > 1.5)
+         {
+            Spawn(class'ShortiePawn',,,spawnPoint.Location,spawnPoint.Rotation );
+         }
+         else
+         {
+            Spawn(class'ScreamerPawn',,,spawnPoint.Location,spawnPoint.Rotation );
+         }
+      }
+   }
+}
 
 
 
@@ -247,48 +283,14 @@ function ChangeFuryState(bool fury)
 //------------------------------------------------------------------
 event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocation, Object.Vector Momentum, class<DamageType> DamageType, optional Actor.TraceHitInfo HitInfo, optional Actor DamageCauser)
 {
-   local UTEmit_HitEffect HitEffect;
-   local vector BloodMomentum;
-   local ParticleSystem BloodTemplate;
-   local NavigationPoint spawnPoint;
-
    LogMessage("Event Pawn TakeDamage");
 
-					BloodTemplate = class'UTEmitter'.static.GetTemplateForDistance(GetFamilyInfo().default.BloodEffects, HitLocation, WorldInfo);
-					if (BloodTemplate != None)
-					{
-						BloodMomentum = Normal(-1.0 * Momentum) + (0.5 * VRand());
-						HitEffect = Spawn(GetFamilyInfo().default.BloodEmitterClass, self,, HitLocation, rotator(BloodMomentum));
-						HitEffect.SetTemplate(BloodTemplate, true);
-						HitEffect.AttachTo(self, HitInfo.BoneName);
-         weaponDiab.WeaponPlaySound(diabolusHandAttack);
-					}
-					else
-					{
-         weaponDiab.WeaponPlaySound(diabolusFireAttack);
-                    
-					}
-
-   super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
-   ChangeFuryState(true);
-   myController.NotifyTakeHit1();
-   if (RandRange(1,2) > 1.5)
+   if (!KnockDown)
    {
-      spawnPoint = spawnPoint1;
+      super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
+      ChangeFuryState(true);
    }
-   else
-   {
-      spawnPoint = spawnPoint2;
-   }
-
-   if (RandRange(1,2) > 1.5)
-   {
-   	  Spawn(class'ShortiePawn',,,spawnPoint.Location,spawnPoint.Rotation );
-   }
-   else
-   {
-      Spawn(class'ScreamerPawn',,,spawnPoint.Location,spawnPoint.Rotation );
-   }
+   myController.NotifyTakeHit1(Damage);
 }
 
 
