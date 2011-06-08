@@ -147,7 +147,9 @@ function DrawTransition(Canvas Canvas)
 		class'Engine'.static.AddOverlay(LoadingScreenGameTypeNameFont, Desc, 0.1822, 0.435, 1.0, 1.0, false);
 
 		// Map name
-		class'Engine'.static.AddOverlay(LoadingScreenMapNameFont, MapName, 0.1822, 0.46, 2.0, 2.0, false);
+		// Alterado por Cesar em 07/06/2011 para não mostrar nome do mapa
+		//class'Engine'.static.AddOverlay(LoadingScreenMapNameFont, MapName, 0.1822, 0.46, 2.0, 2.0, false);
+		//class'Engine'.static.AddOverlay(LoadingScreenMapNameFont, "Loading...", 0.1822, 0.46, 2.0, 2.0, false);
 
 		// We don't want to draw hints for the Main Menu or FrontEnd maps, so we'll make sure we have a valid game class
 		if( bAllowHints )
