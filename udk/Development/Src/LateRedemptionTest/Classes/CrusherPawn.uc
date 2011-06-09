@@ -1,5 +1,5 @@
 class CrusherPawn extends UTPawn
-placeable;                           // Available in Content Browser
+placeable;                           // Available in Content Browser 
 
 //==================================================================
 //-----------------------------Variables----------------------------
@@ -59,15 +59,17 @@ defaultproperties
    BlockRigidBody=true
    Physics = PHYS_Walking
 
-   defaultMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
-   defaultAnimTree=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
-   defaultAnimSet(0)=AnimSet'CH_Zombie.Anims.Zombie_AnimSet'
-   defaultPhysicsAsset=PhysicsAsset'CH_Zombie.Mesh.SK_Zombie_Physics'
+   defaultMesh=SkeletalMesh'CH_Crusher.Mesh.Crusher2'
+   defaultAnimTree=AnimTree'CH_Crusher.Anim.Crusher_AnimTree'
+   defaultAnimSet(0)=AnimSet'CH_Crusher.Anim.Crusher_Anim'
+   defaultPhysicsAsset=PhysicsAsset'CH_Crusher.Mesh.Crusher2_Physics'
+
+   SoundGroupClass=class'UTGame.UTPawnSoundGroup_Marshall'
 
    Begin Object Name=WPawnSkeletalMeshComponent
-      SkeletalMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
-      AnimSets(0)=AnimSet'CH_Zombie.Anims.Zombie_AnimSet'
-      AnimTreeTemplate=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
+      SkeletalMesh=SkeletalMesh'CH_Crusher.Mesh.Crusher2'
+      AnimSets(0)=AnimSet'CH_Crusher.Anim.Crusher_Anim'
+      AnimTreeTemplate=AnimTree'CH_Crusher.Anim.Crusher_AnimTree'
 
       bOwnerNoSee=false
       CastShadow=true
