@@ -32,6 +32,7 @@ var (LateRedemption) int revengeTimer;         // Fury time lenght
 var (LateRedemption) int minGroundSpeed;       // Minimum Ground Speed
 var (LateRedemption) int maxGroundSpeed;       // Minimum Ground Speed
 var (LateRedemption) int initialHealth;        // Initial Health
+var (LateRedemption) SoundCue butcherPain;     // Sound: I'm bleeding
 
 
 
@@ -41,8 +42,8 @@ defaultproperties
 //---------------let's give them a default value--------------------
 //==================================================================
 {
-   minGroundSpeed = 80;
-   maxGroundSpeed = 800;
+   minGroundSpeed = 90;
+   maxGroundSpeed = 650;
    AnimSetName = "ATTACK"
    AttAcking = false
    logactive = false;
@@ -59,6 +60,7 @@ defaultproperties
    defaultAnimTree=AnimTree'CH_Butcher.Anim.Butcher_AnimTree'
    defaultAnimSet(0)=AnimSet'CH_Butcher.Anim.Butcher_Anim'
    defaultPhysicsAsset=PhysicsAsset'CH_Butcher.Mesh.Butcher_Physics'
+   butcherPain=SoundCue'LateRedemptionMonsterSounds.Screamer_Pain'
 
    Begin Object Name=WPawnSkeletalMeshComponent
       SkeletalMesh=SkeletalMesh'CH_Butcher.Mesh.Butcher'
@@ -213,6 +215,7 @@ event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocat
    ChangePawnSpeed(changeSpeed);
    super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
    myController.NotifyTakeHit1();
+   self.PlaySound(butcherPain, false, true);
 }
 
 

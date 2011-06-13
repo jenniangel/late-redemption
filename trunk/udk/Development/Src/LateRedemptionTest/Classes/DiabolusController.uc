@@ -130,7 +130,8 @@ function NotifyTakeHit1(int damage)
    }
    else
    {
-      myDiabolus.SetFireAttacking(false);    // Set to false to enable fury state
+      if (!self.IsinState('AttackFire'))
+      	myDiabolus.SetFireAttacking(false);    // Set to false to enable fury state
       GotoState('AttackFire');
    }
    }

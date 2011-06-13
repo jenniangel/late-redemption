@@ -35,8 +35,9 @@ var (LateRedemption) int maxGroundSpeed;       // Max Chase Marshall Speed
 var (LateRedemption) int initialHealth;        // Initial Health
 var (LateRedemption) array<NavigationPoint> navigationPointsScreamer; //Hide and Seek
 var (LateRedemption) float firingRate;         // Time till next fire
-var (LateRedemption) SoundCue screamerAttack;  // Sound when attack
 var (LateRedemption) int idleTime;             // Time to Start Move
+var (LateRedemption) SoundCue screamerAttack;  // Sound when attack
+var (LateRedemption) SoundCue screamerPain;    // Sound: I'm bleeding
 
 
 defaultproperties
@@ -64,7 +65,8 @@ defaultproperties
    defaultAnimTree=AnimTree'CH_Screamer.Anims.AnimTree_Screamer'
    defaultAnimSet(0)=AnimSet'CH_Screamer.Anims.Anim_Screamer'
    defaultPhysicsAsset=PhysicsAsset'CH_Screamer.Mesh.SK_Screamer_Physics'
-   screamerAttack=SoundCue'A_Music_GoDown.MusicStingers.A_Stinger_GoDown_Killingspree01Cue'
+   screamerAttack=SoundCue'LateRedemptionMonsterSounds.Screamer_Attack_2'
+   screamerPain=SoundCue'LateRedemptionMonsterSounds.Screamer_Pain'
 
    Begin Object Name=WPawnSkeletalMeshComponent
       SkeletalMesh=SkeletalMesh'CH_Screamer.Mesh.SK_Screamer'
@@ -247,6 +249,7 @@ event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocat
    super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
    ChangePawnSpeed(changeSpeed);
    myController.NotifyTakeHit1();
+   self.PlaySound(screamerPain, false, true);
 }
 
 

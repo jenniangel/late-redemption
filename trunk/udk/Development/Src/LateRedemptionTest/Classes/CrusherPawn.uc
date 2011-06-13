@@ -35,6 +35,7 @@ var (LateRedemption) int maxGroundSpeed;       // Minimum Ground Speed
 var (LateRedemption) int initialHealth;        // Initial Health
 var (LateRedemption) array<NavigationPoint> navigationPointsCrusher; //Hide and Seek
 var (LateRedemption) SoundCue crusherAwake;    // Sound: see Marshall
+var (LateRedemption) SoundCue crusherPain;     // Sound: I'm bleeding
 
 
 
@@ -44,8 +45,8 @@ var (LateRedemption) SoundCue crusherAwake;    // Sound: see Marshall
 //==================================================================
 defaultproperties
 {
-   minGroundSpeed = 100;
-   maxGroundSpeed = 800;
+   minGroundSpeed = 90;
+   maxGroundSpeed = 650;
    AnimSetName = "ATTACK"
    AttAcking = false
    logactive = false;
@@ -63,6 +64,8 @@ defaultproperties
    defaultAnimTree=AnimTree'CH_Crusher.Anim.Crusher_AnimTree'
    defaultAnimSet(0)=AnimSet'CH_Crusher.Anim.Crusher_Anim'
    defaultPhysicsAsset=PhysicsAsset'CH_Crusher.Mesh.Crusher2_Physics'
+   crusherAwake=SoundCue'LateRedemptionMonsterSounds.Crusher_Awake_Cue'
+   crusherPain=SoundCue'LateRedemptionMonsterSounds.Crusher_Pain'
 
    SoundGroupClass=class'UTGame.UTPawnSoundGroup_Marshall'
 
@@ -225,6 +228,7 @@ event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocat
    ChangePawnSpeed(changeSpeed);
    super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
    myController.NotifyTakeHit1();
+   self.PlaySound(crusherPain, false, true);
    }
 }
 

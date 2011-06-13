@@ -36,8 +36,11 @@ var (LateRedemption) int heartTime;            // Time to Start Move
 var (LateRedemption) float firingRate;         // Time till next fire
 var (LateRedemption) SoundCue diabolusFireAttack;  // Sound when attack by Fire
 var (LateRedemption) SoundCue diabolusHandAttack;  // Sound when attack by Hand
+var (LateRedemption) SoundCue diabolusPain;        // Sound: I'm bleeding
 var (LateRedemption) NavigationPoint spawnPoint1;
 var (LateRedemption) NavigationPoint spawnPoint2;
+var (LateRedemption) NavigationPoint spawnPoint3;
+var (LateRedemption) NavigationPoint spawnPoint4;
 
 defaultproperties
 //==================================================================
@@ -69,6 +72,9 @@ defaultproperties
    defaultAnimTree=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
    defaultAnimSet(0)=AnimSet'CH_Zombie.Anims.Zombie_AnimSet'
    defaultPhysicsAsset=PhysicsAsset'CH_Zombie.Mesh.SK_Zombie_Physics'
+   diabolusFireAttack=SoundCue'LateRedemptionMonsterSounds.Diabolus_1_Cue'
+   diabolusHandAttack=SoundCue'LateRedemptionMonsterSounds.Screamer_Attack_Cue'
+   diabolusPain=SoundCue'LateRedemptionMonsterSounds.Marshall_Pain_2'
 
    Begin Object Name=WPawnSkeletalMeshComponent
       SkeletalMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
@@ -214,6 +220,7 @@ function SetHandAttacking(bool atacar)
 function SetHeartTime(bool knockout)
 {
    local NavigationPoint spawnPoint;
+   local float result;
 
    if (KnockDown != knockout)
    {
@@ -221,13 +228,28 @@ function SetHeartTime(bool knockout)
 	  AttAcking = knockout;
       if (knockout)
       {
-         if (RandRange(1,2) > 1.5)
+         result = RandRange(0,4);
+      	 if (result < 1.0)
          {
             spawnPoint = spawnPoint1;
          }
          else
          {
-            spawnPoint = spawnPoint2;
+         	if (result < 2)
+            {
+               spawnPoint = spawnPoint2;
+            }
+            else
+            {
+               if (result < 3)
+               {
+               spawnPoint = spawnPoint3;
+               }
+               else
+               {
+               spawnPoint = spawnPoint4;
+               }
+            }
          }
 
          if (RandRange(1,2) > 1.5)
@@ -289,6 +311,7 @@ event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocat
    {
       super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
       ChangeFuryState(true);
+      self.PlaySound(diabolusPain, false, true);
    }
    myController.NotifyTakeHit1(Damage);
 }
