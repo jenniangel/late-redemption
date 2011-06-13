@@ -239,11 +239,6 @@ function AtualizarHora()
 			delayHora = GRI.ElapsedTime;
 		}
 
-		// No final do tempo, mostra hora em tempo real
-		//if (GRI.SegundosJogo()>=11000)
-		//{
-		//	Hora.SetString("text",  FormatTime(GRI.SegundosJogo()));
-		//}
 
 		// QUando o GRI manda, tem que mostrar a hora!
 		if (GRI.mostrarHora==true)
@@ -269,10 +264,19 @@ function AtualizarHora()
 				escondeHora=false;
 			}
 		}
+
+		// No final do tempo, mostra hora em tempo real
+		if (GRI.SegundosJogo()>=11000)
+		{
+			Hora.SetString("text",  FormatTime(GRI.SegundosJogo()));
+		}
+
+
 	} 
 	else
 	{
-		Hora.SetVisible(false);
+		// esconde a hora
+		Hora.SetString("text", "");
 	}
 }
 
