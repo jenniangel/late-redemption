@@ -35,9 +35,10 @@ var (LateRedemption) int damageValue;          // Health to drain on touch
 var (LateRedemption) int minGroundSpeed;       // Min Chase Marshall Speed
 var (LateRedemption) int maxGroundSpeed;       // Max Chase Marshall Speed
 var (LateRedemption) int initialHealth;        // Shortie Initial Health
+var (LateRedemption) array<ShortiePawn> attackGroupMembers; //My team...
 var (LateRedemption) SoundCue shortieAwake;    // Sound: see Marshall
 var (LateRedemption) SoundCue shortieAttack;   // Sound: attack Marshall
-var (LateRedemption) array<ShortiePawn> attackGroupMembers; //My team...
+var (LateRedemption) SoundCue shortiePain;     // Sound: I'm bleeding
 
 
 
@@ -48,7 +49,7 @@ defaultproperties
 //==================================================================
 {
    minGroundSpeed = 400;
-   maxGroundSpeed = 750;
+   maxGroundSpeed = 600;
    AnimSetName = "ATTACK"
    AttAcking = false
    logactive = false;
@@ -65,8 +66,9 @@ defaultproperties
    defaultAnimTree=AnimTree'CH_Shortie.Anims.Shortie_AnimTree'
    defaultAnimSet(0)=AnimSet'CH_Shortie.Anims.SK_Shortie_Anims'
    defaultPhysicsAsset=PhysicsAsset'CH_Shortie.Mesh.SK_Shortie_Physics'
-   shortieAwake=SoundCue'A_Effort_EnigmaMean_LandHeavy_Cue'
-   shortieAttack=SoundCue'A_Effort_EnigmaMean_PainMedium_Cue'
+   shortieAwake=SoundCue'LateRedemptionPackageSounds.ShortieAttack2_Cue'
+   shortieAttack=SoundCue'LateRedemptionMonsterSounds.Shortie_Attack'
+   shortiePain=SoundCue'LateRedemptionMonsterSounds.Shortie_Pain'
 
    Begin Object Name=WPawnSkeletalMeshComponent
       SkeletalMesh=SkeletalMesh'CH_Shortie.Mesh.SK_Shortie'
@@ -308,6 +310,7 @@ event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocat
    ChangePawnSpeed(changeSpeed);
    super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
    myController.NotifyTakeHit1(true);
+   self.PlaySound(shortiePain, false, true);
 }
 
 
