@@ -13,6 +13,12 @@ simulated function SetCharacterClassFromInfo(class<UTFamilyInfo> Info)
 	Mesh.SetAnimTreeTemplate(defaultAnimTree);
 }
 
+// método sobreescrito por Cesar em 12/06/2011
+// para desabilitar pulo com dois toques
+function bool Dodge(eDoubleClickDir DoubleClickMove)
+{
+}
+
 /**
  * Faz o tempo parar de contar quando o jogador morre. 
  **/
@@ -76,4 +82,7 @@ DefaultProperties
 		bPerBoneMotionBlur=true
 	End Object
 	mesh = WPawnSkeletalMeshComponent
+	
+	//MaxMultiJump = 0
+	//MultiJumpRemaining = 0
 }
