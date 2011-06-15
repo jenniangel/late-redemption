@@ -8,6 +8,7 @@ var bool bGammaCorrection;
 //Create variables to hold references to the Flash MovieClips and Text Fields that will be modified
 var GFxObject Hora;
 var GFxObject qtdMunicaoArma, qtdMunicaoPenteAtivo, qtdMunicaoPenteReserva, imagemPenteReserva, mensagemCarregando, percentualVida;
+var GFxObject penteNormal, penteEspecial;
 
 var LRGameReplicationInfo GRI;
 var WorldInfo ThisWorld;
@@ -118,6 +119,9 @@ function Init(optional LocalPlayer LocPlay)
 	
 	CenterTextTF = GetVariableObject("_root.centerTextMC.centerText.textField");
 	CenterTextMC = GetVariableObject("_root.centerTextMC");
+	
+	penteNormal = GetVariableObject("_root.PenteNormal");
+	penteEspecial = GetVariableObject("_root.PenteEspecial");
 	
 	
 	HudVida5 = GetVariableObject("_root.vida5");
@@ -295,6 +299,21 @@ function AtualizarMunicao(UTPawn UTP)
 		clips = Weapon.GetClipsCount();
 		qtdMunicaoArma.SetString("text",i$"");
 		qtdMunicaoPenteAtivo.SetString("text",clips$"");
+		
+		
+		// Mostrar a imagem do pente segundo o tipo de munição
+		if (Weapon.tipoMunicao==1)
+		{
+			penteNormal.SetVisible(true);
+			penteEspecial.SetVisible(false);
+		}
+		else
+		{
+			penteNormal.SetVisible(false);
+			penteEspecial.SetVisible(true);
+		}
+
+		
 		
 		mensagemCarregando.SetVisible(Weapon.bIsReloading);
 
