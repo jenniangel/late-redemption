@@ -14,6 +14,11 @@ var int clipSize;
 var int clips;
 var bool bIsReloading;
 
+// Variavel criada por Cesar em 16/06/11 para guardar munição do Marshall
+// 1 = munição normal
+// 2= munição especial
+var int tipoMunicao;
+
 var bool bWasACombo;
 var int CurrentPath;
 
@@ -514,6 +519,8 @@ defaultproperties
 	WeaponFireWaveForm=ForceFeedbackWaveformShooting1
 	
 	SomRecarregarArma = SoundCue'LateRedemptionCharSounds.GlockReload_Cue'
+	
+	tipoMunicao = 1 // munição normal
 }
 
 
