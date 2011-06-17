@@ -33,7 +33,7 @@ function bool Start(optional bool StartPaused = false)
     Advance(0);
 
 	RootMC = GetVariableObject("_root");
-    PauseMC = RootMC.GetObject("pausemenu");    
+    PauseMC = RootMC.GetObject("pausemenu");
 
 	Btn_Resume_Wrapper = PauseMC.GetObject("resume");
 	Btn_Exit_Wrapper = PauseMC.GetObject("exit");

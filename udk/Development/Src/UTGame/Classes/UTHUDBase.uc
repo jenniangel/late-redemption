@@ -250,7 +250,8 @@ function TogglePauseMenu()
         if (PauseMenuMovie == None)
         {
 	        PauseMenuMovie = new class'GFxUI_PauseMenu';
-            PauseMenuMovie.MovieInfo = SwfMovie'UDKHud.udk_pausemenu';
+            //PauseMenuMovie.MovieInfo = SwfMovie'UDKHud.udk_pausemenu';
+			PauseMenuMovie.MovieInfo = SwfMovie'LRMenu.PauseMenu';
             PauseMenuMovie.bEnableGammaCorrection = FALSE;
 			PauseMenuMovie.LocalPlayerOwnerIndex = class'Engine'.static.GetEngine().GamePlayers.Find(LocalPlayer(PlayerOwner.Player));
             PauseMenuMovie.SetTimingMode(TM_Real);
