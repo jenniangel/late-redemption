@@ -182,7 +182,7 @@ state Anger
    Begin:
       LogMessage("State CrusherController Anger");
       awake = true;
-      myCrusher.SetAttacking(true,true);
+      myCrusher.SetAttacking(false,true);
       Sleep(AngerTime);
       myCrusher.SetAttacking(false,false);
       thePlayer = GetALocalPlayerController().Pawn;
