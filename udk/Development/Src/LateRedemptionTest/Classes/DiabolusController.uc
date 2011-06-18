@@ -264,6 +264,9 @@ state HealMe
 
    Begin:
       myDiabolus.SetFireAttacking(false);
+      myDiabolus.knockDown = true;            // Enable light in the spawn points via kismet
+      Sleep(1);                               // before spawning the enemies
+      myDiabolus.knockDown = false;
       myDiabolus.SetHeartTime(true);
       Sleep(heartTime);
       myDiabolus.SetHeartTime(false);

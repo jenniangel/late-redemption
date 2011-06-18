@@ -37,6 +37,8 @@ var (LateRedemption) float firingRate;         // Time till next fire
 var (LateRedemption) SoundCue diabolusFireAttack;  // Sound when attack by Fire
 var (LateRedemption) SoundCue diabolusHandAttack;  // Sound when attack by Hand
 var (LateRedemption) SoundCue diabolusPain;        // Sound: I'm bleeding
+var (LateRedemption) SoundCue diabolusRindo;       // Sound: I'm back
+var (LateRedemption) SoundCue diabolusKnocked;     // Sound: I'm really hurted
 var (LateRedemption) NavigationPoint spawnPoint1;
 var (LateRedemption) NavigationPoint spawnPoint2;
 var (LateRedemption) NavigationPoint spawnPoint3;
@@ -75,6 +77,8 @@ defaultproperties
    diabolusFireAttack=SoundCue'LateRedemptionMonsterSounds.Diabolus_1_Cue'
    diabolusHandAttack=SoundCue'LateRedemptionMonsterSounds.Screamer_Attack_Cue'
    diabolusPain=SoundCue'LateRedemptionMonsterSounds.Marshall_Pain_2'
+   diabolusRindo=SoundCue'LateRedemptionMonsterSounds.DiabolusRindo_Cue'
+   diabolusKnocked=SoundCue'LateRedemptionMonsterSounds.DiabolusKnocked_Cue'
 
    Begin Object Name=WPawnSkeletalMeshComponent
       SkeletalMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
@@ -225,9 +229,9 @@ function SetHeartTime(bool knockout)
    if (KnockDown != knockout)
    {
       knockDown = knockout;
-	  AttAcking = knockout;
       if (knockout)
       {
+         self.PlaySound(diabolusKnocked, false, true);
          result = RandRange(0,4);
       	 if (result < 1.0)
          {
@@ -243,11 +247,11 @@ function SetHeartTime(bool knockout)
             {
                if (result < 3)
                {
-               spawnPoint = spawnPoint3;
+                  spawnPoint = spawnPoint3;
                }
                else
                {
-               spawnPoint = spawnPoint4;
+                  spawnPoint = spawnPoint4;
                }
             }
          }
@@ -260,6 +264,10 @@ function SetHeartTime(bool knockout)
          {
             Spawn(class'ScreamerPawn',,,spawnPoint.Location,spawnPoint.Rotation );
          }
+      }
+      else
+      {
+         self.PlaySound(diabolusRindo, false, true);
       }
    }
 }
