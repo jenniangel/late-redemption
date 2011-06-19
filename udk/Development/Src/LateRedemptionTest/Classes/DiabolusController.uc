@@ -103,14 +103,16 @@ function Possess(Pawn aPawn, bool bVehicleTransition)
 // Whenever the Pawn is hit, it will inform its controller by means
 // of this function.
 // The action being taken is to lock target on player, send a
-// request towards the Pawn Class to increase its speed (revenge
-// timer and attack sub-states are triggered here) and change 
-// the internal state value.
-// If the player is too far from the Diabolus, the Diabolus will 
-// start a cover routine, trying to go to a safe place or try to
-// close the distance towards the player.
-// Also this is the momment to stop attacking (if attack is ongoing)
-// in order to restart it latter on (eventually in the fury mode).
+// request towards the Pawn Class to increase its firint-speed (if in
+// attackfire state) and revenge timer and attack sub-states will be
+// Also this is the momment to stop firing-attacking (if attack is 
+// ongoing) in order to restart it latter on (eventually in the fury 
+// mode), where the firing rate is increased.
+// Also, the most important transition from Diabolus State Machine
+// occurs from within this Function: When receiving damage and
+// it is noticed that the current health is 20% lower than initial
+// healt, the HealMe state (a State where Diabolus will expose his
+// weakness) will be called.
 //------------------------------------------------------------------
 function NotifyTakeHit1(int damage)
 {
@@ -118,22 +120,22 @@ function NotifyTakeHit1(int damage)
    thePlayer = GetALocalPlayerController().Pawn;
 
    if (myDiabolus.Health < (initialHealth/5))  // 10% of initial health.
-      GotoState('HealMe');
+      if (!self.IsinState('HealMe'))
+         GotoState('HealMe');
    else
    {
 
-   distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
-
-   if (distanceToPlayer < handAttackDistance)
-   { 
-      GotoState('AttackHand');
-   }
-   else
-   {
-      if (!self.IsinState('AttackFire'))
-      	myDiabolus.SetFireAttacking(false);    // Set to false to enable fury state
-      GotoState('AttackFire');
-   }
+      distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
+      if (distanceToPlayer < handAttackDistance)
+      { 
+         GotoState('AttackHand');
+      }
+      else
+      {
+         if (!self.IsinState('AttackFire'))
+      	   myDiabolus.SetFireAttacking(false);    // Set to false to enable fury state
+         GotoState('AttackFire');
+      }
    }
 }
 
@@ -141,12 +143,12 @@ function NotifyTakeHit1(int damage)
 
 //------------------------------------------------------------------
 //------------------------------State = IDLE------------------------
-// In this state, the Diabolus will wait for a while (IdleInterval)
-// and in case Player is not visible, it will start a patrol.
+// In this state, the Diabolus will wait for Marshall to be visible
+// in order to start its attack routine.
 // This is the default state - the one triggered after the 
 // Diabolus is possessed.
-// If when in this state, the player enters the vision radio, a
-// pursuit will start.
+// Once attack is triggered (as described below), it never stops...
+// So, be carefull when deciding to enter in the Library...
 //------------------------------------------------------------------
 auto state Idle
 {
@@ -169,10 +171,8 @@ auto state Idle
    }
 
    Begin:
-//      ignores SeePlayer;
       LogMessage("State DiabolusController Idle");
       Sleep(IdleInterval);
-//      enables(SeePlayer);  
 }
 
 
@@ -182,10 +182,12 @@ auto state Idle
 // If we reached this state (by the way, global state Attack is kept
 // when revenge timer is active as well - i.e.: state Revenge is
 // in fact a Attack Sub-state) it means that Player is under 
-// Diabolus's fireballs range. Hunting season has just begun...
-// If the player is able to escape from Diabolus's fire sight (either
-// by hiding himself or by fleeing)... Ops, in the library, there is
-// No way to escape from Diabolus fire sight huahaha...
+// Diabolus's fireballs range (in fact, unfortunatelly this is true
+// in the majority of places within the Library). Hunting season has 
+// just begun... If the player is able to escape from Diabolus's fire 
+// sight (either by hiding himself or by fleeing)... Ops, in the 
+// library, there is No way to escape from Diabolus fire sight, unless
+// Marshall enters the Diabolus Claw attack range huahaha...
 //------------------------------------------------------------------
 state AttackFire
 {
@@ -216,13 +218,12 @@ state AttackFire
 
 //------------------------------------------------------------------
 //------------------------------State = AttackHand------------------
-// If we reached this state (by the way, global state Attack is kept
-// when revenge timer is active as well - i.e.: state Revenge is
-// in fact a Attack Sub-state) it means that Player is under 
-// Diabolus's fireballs range. Hunting season has just begun...
-// If the player is able to escape from Diabolus's fire sight (either
-// by hiding himself or by fleeing), Diabolus state will be moved 
-// back to Pursuit.
+// If we reached this state it means that Player is under 
+// Diabolus's claws range. Sorry to say that Marshall will not last
+// long if kept in this radio.
+// If the player is able to escape from Diabolus's claws attack range
+// Diabolus state will be moved back to AttackFire (i.e.: whereas not
+// dying, Diabolus will be in constant attack).
 //------------------------------------------------------------------
 state AttackHand
 {
@@ -251,22 +252,40 @@ state AttackHand
 
 
 //------------------------------------------------------------------
-//------------------------------State = AttackHand------------------
+//------------------------------State = HealMe----------------------
+// This state is reached when Diabolus suffers a heavy ammount of
+// damage, towards NotifyTakeHit1 function.
+// In this state, a new NotifyTakeHit function is declared in order
+// to allow a special transition from current state to Dying state,
+// where a special Dying annimation can be put in place.
+// Basically in this state, the Spawn points (i.e.: points where
+// Diabolus can spawn Shorties and Screamers) are signallized towards
+// Kismet and the annimation to expose the Diabolus Heart is shown.
+// During a pre-determined time (defined by heartTime), it will be
+// kept exposed and the Shots fired during this time will reduce the
+// heartHEalth. When it reaches 0, Diabolus will go to dead state.
+// When heartTime runs out and Diabolus is still alive, an Evil 
+// laught will be heard and its Strenght will be restored.
+//------------------------------------------------------------------
 state HealMe
 {
    function NotifyTakeHit1(int damage)
    {
       heartHealth = heartHealth - damage;
       if (heartHealth <= 0)
+         {
+         myDiabolus.SetHeartTime(false);
          GotoState('Dying');
+         }
    }
 
 
    Begin:
       myDiabolus.SetFireAttacking(false);
-      myDiabolus.knockDown = true;            // Enable light in the spawn points via kismet
-      Sleep(1);                               // before spawning the enemies
-      myDiabolus.knockDown = false;
+      myDiabolus.SetHandAttacking(false);
+//      myDiabolus.knockDown = true;            // Enable light in the spawn points via kismet
+//      Sleep(1);                               // before spawning the enemies
+//      myDiabolus.knockDown = false;
       myDiabolus.SetHeartTime(true);
       Sleep(heartTime);
       myDiabolus.SetHeartTime(false);

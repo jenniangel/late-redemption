@@ -70,10 +70,10 @@ defaultproperties
    BlockRigidBody=true
    Physics = PHYS_Walking
 
-   defaultMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
-   defaultAnimTree=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
-   defaultAnimSet(0)=AnimSet'CH_Zombie.Anims.Zombie_AnimSet'
-   defaultPhysicsAsset=PhysicsAsset'CH_Zombie.Mesh.SK_Zombie_Physics'
+   defaultMesh=SkeletalMesh'CH_Diabolus.Mesh.SK_Diabolus'
+   defaultAnimTree=AnimTree'CH_Diabolus.Anims.Diabolus_AninTree'
+   defaultAnimSet(0)=AnimSet'CH_Diabolus.Anims.Diabolus_AnimSet'
+   defaultPhysicsAsset=PhysicsAsset'CH_Diabolus.Mesh.SK_Diabolus_Physics'
    diabolusFireAttack=SoundCue'LateRedemptionMonsterSounds.Diabolus_1_Cue'
    diabolusHandAttack=SoundCue'LateRedemptionMonsterSounds.Screamer_Attack_Cue'
    diabolusPain=SoundCue'LateRedemptionMonsterSounds.Marshall_Pain_2'
@@ -81,9 +81,9 @@ defaultproperties
    diabolusKnocked=SoundCue'LateRedemptionMonsterSounds.DiabolusKnocked_Cue'
 
    Begin Object Name=WPawnSkeletalMeshComponent
-      SkeletalMesh=SkeletalMesh'CH_Zombie.Mesh.SK_Zombie'
-      AnimSets(0)=AnimSet'CH_Zombie.Anims.Zombie_AnimSet'
-      AnimTreeTemplate=AnimTree'CH_Zombie.Anims.Zombie_AninTree'
+      SkeletalMesh=SkeletalMesh'CH_Diabolus.Mesh.SK_Diabolus'
+      AnimSets(0)=AnimSet'CH_Diabolus.Anims.Diabolus_AnimSet'
+      AnimTreeTemplate=AnimTree'CH_Diabolus.Anims.Diabolus_AninTree'
       bOwnerNoSee=false
       CastShadow=true
       BlockRigidBody=true
