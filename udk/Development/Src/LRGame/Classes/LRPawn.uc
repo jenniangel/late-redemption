@@ -82,6 +82,8 @@ DefaultProperties
 		bPerBoneMotionBlur=true
 	End Object
 	mesh = WPawnSkeletalMeshComponent
+
+	GroundSpeed=360.0
 	
 	//MaxMultiJump = 0
 	//MultiJumpRemaining = 0
