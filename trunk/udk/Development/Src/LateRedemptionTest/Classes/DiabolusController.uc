@@ -118,14 +118,17 @@ function NotifyTakeHit1(int damage)
 {
    LogMessage("Event DiabolusController NotifyTakeHit");
    thePlayer = GetALocalPlayerController().Pawn;
+   distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
 
    if (myDiabolus.Health < (initialHealth/5))  // 10% of initial health.
+   {	   
       if (!self.IsinState('HealMe'))
+      {
          GotoState('HealMe');
+      }
+   }
    else
    {
-
-      distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
       if (distanceToPlayer < handAttackDistance)
       { 
          GotoState('AttackHand');
@@ -133,7 +136,9 @@ function NotifyTakeHit1(int damage)
       else
       {
          if (!self.IsinState('AttackFire'))
-      	   myDiabolus.SetFireAttacking(false);    // Set to false to enable fury state
+         {
+      	    myDiabolus.SetFireAttacking(false);    // Set to false to enable fury state
+         }
          GotoState('AttackFire');
       }
    }
@@ -159,20 +164,22 @@ auto state Idle
       if( PlayerController(thePlayer.Controller) != none )
       {
          distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
-         if (distanceToPlayer < handAttackDistance)
-         { 
-            GotoState('AttackHand');
-         }
-         else
+         if (distanceToPlayer < 1000)
          {
-            GotoState('AttackFire');
+            if (distanceToPlayer < handAttackDistance)
+            { 
+               GotoState('AttackHand');
+            }
+            else
+            {
+               GotoState('AttackFire');
+            }
          }
       }
    }
 
    Begin:
       LogMessage("State DiabolusController Idle");
-      Sleep(IdleInterval);
 }
 
 
@@ -195,7 +202,7 @@ state AttackFire
       LogMessage("State DiabolusController AttackFire");
       myDiabolus.SetHandAttacking(false);
       myDiabolus.ZeroMovementVariables();
-      MoveToward(thePlayer, thePlayer, 10000);
+      MoveToward(thePlayer, thePlayer, 1000);
       myDiabolus.SetFireAttacking(true);
 
       while(true && thePlayer.Health > 0)
@@ -231,7 +238,7 @@ state AttackHand
       LogMessage("State DiabolusController AttackHand");
       myDiabolus.SetFireAttacking(false);
       myDiabolus.ZeroMovementVariables();
-      MoveToward(thePlayer, thePlayer, 10000);
+      MoveToward(thePlayer, thePlayer, 1000);
       myDiabolus.SetHandAttacking(true);
       while(true && thePlayer.Health > 0)
       {   
