@@ -302,7 +302,7 @@ function AtualizarMunicao(UTPawn UTP)
 		
 		
 		// Mostrar a imagem do pente segundo o tipo de munição
-		if (Weapon.tipoMunicao==1)
+		if (GRI.tipoMunicao==1)
 		{
 			penteNormal.SetVisible(true);
 			penteEspecial.SetVisible(false);
