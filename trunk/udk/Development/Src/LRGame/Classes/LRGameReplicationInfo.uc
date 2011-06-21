@@ -10,6 +10,11 @@ var bool jaTocouUma;
 var bool jaTocouDuas;
 var bool jaTocouTres;
 
+// Variavel criada por Cesar em 16/06/11 para guardar munição do Marshall
+// 1 = munição normal
+// 2= munição especial
+var int tipoMunicao;
+
 var int tocando;    // indica se as badaladas estão acontecendo
 var int delayToque; // usada para saber quanto tempo o toque está dando
 
@@ -92,5 +97,7 @@ defaultproperties
 
 	contaTempo = false;
 	mostrarHora = false;
+
+	tipoMunicao = 1 // munição normal
 }
 
