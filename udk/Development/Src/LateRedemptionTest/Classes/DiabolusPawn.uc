@@ -230,6 +230,8 @@ function SetHeartTime(bool knockout)
    local NavigationPoint spawnPoint;
    local float result;
 
+   dizzy = false;
+
    if (KnockDown != knockout)
    {
       knockDown = knockout;
@@ -322,7 +324,7 @@ event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocat
    if (!KnockDown)
       if (!dizzy)
       {
-         super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
+         super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum/100,DamageType,HitInfo,DamageCauser);
          ChangeFuryState(true);
          self.PlaySound(diabolusPain, false, true);
       }

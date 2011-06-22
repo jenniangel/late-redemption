@@ -124,6 +124,7 @@ function NotifyTakeHit1(int damage)
    {	   
       if (!self.IsinState('HealMe'))
       {
+         myDiabolus.dizzy = true;            // Enable light in the spawn points via kismet
          GotoState('HealMe');
       }
    }
@@ -179,6 +180,7 @@ auto state Idle
    }
 
    Begin:
+      myDiabolus.SetHeartTime(false);
       LogMessage("State DiabolusController Idle");
 }
 
@@ -200,6 +202,7 @@ state AttackFire
 {
    Begin:
       LogMessage("State DiabolusController AttackFire");
+      myDiabolus.SetHeartTime(false);
       myDiabolus.SetHandAttacking(false);
       myDiabolus.ZeroMovementVariables();
       MoveToward(thePlayer, thePlayer, 1000);
@@ -236,6 +239,7 @@ state AttackHand
 {
    Begin:
       LogMessage("State DiabolusController AttackHand");
+      myDiabolus.SetHeartTime(false);
       myDiabolus.SetFireAttacking(false);
       myDiabolus.ZeroMovementVariables();
       MoveToward(thePlayer, thePlayer, 1000);
@@ -291,11 +295,9 @@ state HealMe
    Begin:
       myDiabolus.SetFireAttacking(false);
       myDiabolus.SetHandAttacking(false);
-      myDiabolus.dizzy = true;            // Enable light in the spawn points via kismet
-      Sleep(2);                               // before spawning the enemies
-      myDiabolus.dizzy = false;
+      Sleep(1.7);                               // before spawning the enemies
       myDiabolus.SetHeartTime(true);
-      Sleep(heartTime-2);
+      Sleep(heartTime-1.7);
       myDiabolus.SetHeartTime(false);
       myDiabolus.Health = myDiabolus.initialHealth;
       GotoState('Idle');
