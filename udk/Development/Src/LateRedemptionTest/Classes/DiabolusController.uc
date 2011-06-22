@@ -282,6 +282,7 @@ state HealMe
       if (heartHealth <= 0)
          {
          myDiabolus.SetHeartTime(false);
+		 myDiabolus.ending = true;
          GotoState('Dying');
          }
    }
@@ -290,11 +291,11 @@ state HealMe
    Begin:
       myDiabolus.SetFireAttacking(false);
       myDiabolus.SetHandAttacking(false);
-//      myDiabolus.knockDown = true;            // Enable light in the spawn points via kismet
-//      Sleep(1);                               // before spawning the enemies
-//      myDiabolus.knockDown = false;
+      myDiabolus.dizzy = true;            // Enable light in the spawn points via kismet
+      Sleep(2);                               // before spawning the enemies
+      myDiabolus.dizzy = false;
       myDiabolus.SetHeartTime(true);
-      Sleep(heartTime);
+      Sleep(heartTime-2);
       myDiabolus.SetHeartTime(false);
       myDiabolus.Health = myDiabolus.initialHealth;
       GotoState('Idle');
