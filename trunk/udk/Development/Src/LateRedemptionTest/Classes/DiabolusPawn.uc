@@ -18,6 +18,8 @@ var int changeSpeed;                        // Change fury states
 var bool FireAttAcking;                     // Flag to indicate state
 var bool HandAttAcking;                     // Flag to indicate state
 var bool knockDown;                         // Flag to indicate state
+var bool dizzy;                             // Flag to indicate state
+var bool ending;                            // Flag to indicate state
 var bool AttAcking;                         // Flag to indicate state
 var DiabolusWeapon weaponDiab;
 
@@ -54,6 +56,8 @@ defaultproperties
    FireAttAcking = false
    HandAttAcking = false
    KnockDown = false
+   dizzy = false
+   ending = false
    AttAcking = false
    groundSpeed = 0
    logactive = false;
@@ -71,8 +75,8 @@ defaultproperties
    Physics = PHYS_Walking
 
    defaultMesh=SkeletalMesh'CH_Diabolus.Mesh.SK_Diabolus'
-   defaultAnimTree=AnimTree'CH_Diabolus.Anims.Diabolus_AninTree'
-   defaultAnimSet(0)=AnimSet'CH_Diabolus.Anims.Diabolus_AnimSet'
+   defaultAnimTree=AnimTree'CH_Diabolus.Anims.Diabolus_AnimTree'
+   defaultAnimSet(0)=AnimSet'CH_Diabolus.Anims.SK_Diabolus_Anims'
    defaultPhysicsAsset=PhysicsAsset'CH_Diabolus.Mesh.SK_Diabolus_Physics'
    diabolusFireAttack=SoundCue'LateRedemptionMonsterSounds.Diabolus_1_Cue'
    diabolusHandAttack=SoundCue'LateRedemptionMonsterSounds.Screamer_Attack_Cue'
@@ -82,8 +86,8 @@ defaultproperties
 
    Begin Object Name=WPawnSkeletalMeshComponent
       SkeletalMesh=SkeletalMesh'CH_Diabolus.Mesh.SK_Diabolus'
-      AnimSets(0)=AnimSet'CH_Diabolus.Anims.Diabolus_AnimSet'
-      AnimTreeTemplate=AnimTree'CH_Diabolus.Anims.Diabolus_AninTree'
+      AnimSets(0)=AnimSet'CH_Diabolus.Anims.SK_Diabolus_Anims'
+      AnimTreeTemplate=AnimTree'CH_Diabolus.Anims.Diabolus_AnimTree'
       bOwnerNoSee=false
       CastShadow=true
       BlockRigidBody=true
@@ -316,11 +320,12 @@ event TakeDamage (int Damage, Controller EventInstigator, Object.Vector HitLocat
    LogMessage("Event Pawn TakeDamage");
 
    if (!KnockDown)
-   {
-      super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
-      ChangeFuryState(true);
-      self.PlaySound(diabolusPain, false, true);
-   }
+      if (!dizzy)
+      {
+         super.TakeDamage(Damage,EventInstigator,HitLocation,Momentum,DamageType,HitInfo,DamageCauser);
+         ChangeFuryState(true);
+         self.PlaySound(diabolusPain, false, true);
+      }
    myController.NotifyTakeHit1(Damage);
 }
 
