@@ -153,6 +153,7 @@ simulated function PostBeginPlay()
    changeSpeed = (maxGroundSpeed - minGroundSpeed);
 
    AddDefaultInventory();            //Attach the weapon
+   Mesh.SetPhysicsAsset(defaultPhysicsAsset);
 
    if (myController == none)
    {

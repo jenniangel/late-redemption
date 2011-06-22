@@ -142,6 +142,7 @@ simulated function PostBeginPlay()
    changeSpeed = (maxGroundSpeed - minGroundSpeed);
 
    groupAttack = false;
+   Mesh.SetPhysicsAsset(defaultPhysicsAsset);
 
    if (myController == none)
    {
