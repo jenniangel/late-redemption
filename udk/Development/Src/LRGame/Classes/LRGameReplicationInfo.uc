@@ -15,6 +15,12 @@ var bool jaTocouTres;
 // 2= munição especial
 var int tipoMunicao;
 
+// Dano da munição
+var int danoMunicao;
+
+// Quantidade de vida do Marshall
+var int vidaMarshall;
+
 var int tocando;    // indica se as badaladas estão acontecendo
 var int delayToque; // usada para saber quanto tempo o toque está dando
 
@@ -99,5 +105,7 @@ defaultproperties
 	mostrarHora = false;
 
 	tipoMunicao = 1 // munição normal
+	danoMunicao = 20.0; // Munição normal no Go Easy on Me
+	vidaMarshall = 100.00 // vida do Marshall no Go Easy on Me
 }
 
