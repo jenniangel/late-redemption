@@ -96,6 +96,36 @@ function RestartPlayer(Controller aPlayer) {
 	}
 }
 
+/*
+ * Mata todos os inimigos vivos (utilizado quando Diabolus morre)
+ * */
+exec function KillAllEnemies() {
+	local ShortiePawn shortie;
+	local ScreamerPawn screamer;
+	local ButcherPawn butcher;
+	local CrusherPawn crusher;
+ 
+	foreach AllActors(class 'LateRedemptionTest.ShortiePawn', shortie)
+	{
+		shortie.Destroy();
+	}
+
+	foreach AllActors(class 'LateRedemptionTest.ScreamerPawn', screamer)
+	{
+		screamer.Destroy();
+	}
+
+	foreach AllActors(class 'LateRedemptionTest.ButcherPawn', butcher)
+	{
+		butcher.Destroy();
+	}
+
+	foreach AllActors(class 'LateRedemptionTest.CrusherPawn', crusher)
+	{
+		crusher.Destroy();
+	}
+}
+
 DefaultProperties
 {
 	//Indentify your GameInfo
