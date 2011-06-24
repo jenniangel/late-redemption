@@ -23,20 +23,6 @@ event Activated()
 	WI = GetWorldInfo();
 	GRI = LRGameReplicationInfo(WI.GRI);
 
-	GRI.mostrarHora = true;
 	GRI.ElapsedTime = self.NovoTempoJogo;
 
-	SetTimer(2.0, false, 'EsconderHora');
-
-}
-
-function EsconderHora()
-{
-		local WorldInfo WI;
-	local LRGameReplicationInfo GRI;
-
-	WI = GetWorldInfo();
-	GRI = LRGameReplicationInfo(WI.GRI);
-
-	GRI.mostrarHora = false;
 }
