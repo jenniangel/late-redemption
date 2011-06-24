@@ -442,7 +442,7 @@ defaultproperties
 		SkeletalMesh=SkeletalMesh'LateRedemptionMarshall.Mesh.Glock_mesh2'
 	End Object
 
-	InstantHitMomentum(0)=+20000.0
+	InstantHitMomentum(0)=+10000.0
 
 	WeaponFireTypes(0)=EWFT_InstantHit
 	WeaponFireTypes(1)=EWFT_None // Desabilita o tiro com o botão direito do mouse.
