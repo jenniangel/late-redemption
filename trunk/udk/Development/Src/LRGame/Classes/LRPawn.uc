@@ -33,6 +33,32 @@ simulated State Dying
 
 }
 
+/**
+ * Função sobrescrita para configurar o dano da Glock 
+ * toda vez que Marshall faz um respawn.
+ */
+simulated function WeaponChanged(UTWeapon NewWeapon) {
+	local LRGameReplicationInfo GRI;
+	local UTWeap_Glock glock;
+	
+	super.WeaponChanged(NewWeapon);
+
+	glock = UTWeap_Glock(NewWeapon);
+	if (glock != none) {
+		GRI = LRGameReplicationInfo(WorldInfo.GRI);
+		glock.InstantHitDamage[0] = GRI.danoMunicao;
+	}
+}
+
+simulated function PostBeginPlay() {
+	local LRGameReplicationInfo GRI;
+	
+	GRI = LRGameReplicationInfo(WorldInfo.GRI);
+	HealthMax = GRI.vidaMarshall; // Ainda não está funcionando
+
+	super.PostBeginPlay();
+}
+
 DefaultProperties
 {
 
