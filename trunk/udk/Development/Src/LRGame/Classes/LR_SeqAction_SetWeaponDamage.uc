@@ -1,7 +1,7 @@
 // extend UIAction if this action should be UI Kismet Action instead of a Level Kismet Action
 class LR_SeqAction_SetWeaponDamage extends SequenceAction;
 
-var() float	Damage;
+var float Damage;
 
 event Activated()
 {
@@ -19,7 +19,7 @@ event Activated()
 
 defaultproperties
 {
-	ObjName="Configura dano da arma do Marshall"
+	ObjName="Configurar dano da arma do Marshall"
 	ObjCategory="LateRedemption"
 	VariableLinks(1)=(ExpectedType=class'SeqVar_Float',LinkDesc="Dano",PropertyName=Damage)
 }

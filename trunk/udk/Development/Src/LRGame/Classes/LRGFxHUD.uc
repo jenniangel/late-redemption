@@ -339,6 +339,7 @@ function TickHUD() {
 	local UTVehicle UTV;
 	local UTWeaponPawn UWP;
 	local PlayerController PC;
+	local int healthPercent;
 	
 	//GRI.ElapsedTime = 0;
 
@@ -383,49 +384,51 @@ function TickHUD() {
 	
 			AtualizarMunicao(UTP);
 	
-			percentualVida.SetString("text",UTP.Health$"%");
+			healthPercent = (UTP.Health * 100) / UTP.HealthMax;
+
+			percentualVida.SetString("text",healthPercent$"%");
 			
 			// Esconde todos as camadas vermelhas
 			EsconderTodasCamadasVida();
 
 			// mostra a que tem o alfa correspondente a vida
-			if (UTP.Health>=95)
+			if (healthPercent>=95)
 				HudVida100.SetVisible(true);
-			else if (UTP.Health>=90)
+			else if (healthPercent>=90)
 				HudVida95.SetVisible(true);
-			else if (UTP.Health>=85)
+			else if (healthPercent>=85)
 				HudVida90.SetVisible(true);
-			else if (UTP.Health>=80)
+			else if (healthPercent>=80)
 				HudVida85.SetVisible(true);
-			else if (UTP.Health>=75)
+			else if (healthPercent>=75)
 				HudVida80.SetVisible(true);
-			else if (UTP.Health>=70)
+			else if (healthPercent>=70)
 				HudVida75.SetVisible(true);
-			else if (UTP.Health>=65)
+			else if (healthPercent>=65)
 				HudVida70.SetVisible(true);
-			else if (UTP.Health>=60)
+			else if (healthPercent>=60)
 				HudVida65.SetVisible(true);
-			else if (UTP.Health>=55)
+			else if (healthPercent>=55)
 				HudVida60.SetVisible(true);
-			else if (UTP.Health>=50)
+			else if (healthPercent>=50)
 				HudVida55.SetVisible(true);
-			else if (UTP.Health>=45)
+			else if (healthPercent>=45)
 				HudVida50.SetVisible(true);
-			else if (UTP.Health>=40)
+			else if (healthPercent>=40)
 				HudVida45.SetVisible(true);
-			else if (UTP.Health>=35) 
+			else if (healthPercent>=35) 
 				HudVida40.SetVisible(true);
-			else if (UTP.Health>=30) 
+			else if (healthPercent>=30) 
 				HudVida35.SetVisible(true);
-			else if (UTP.Health>=25) 
+			else if (healthPercent>=25) 
 				HudVida30.SetVisible(true);
-			else if (UTP.Health>=20) 
+			else if (healthPercent>=20) 
 				HudVida25.SetVisible(true);
-			else if (UTP.Health>=15) 
+			else if (healthPercent>=15) 
 				HudVida20.SetVisible(true);
-			else if (UTP.Health>=10)
+			else if (healthPercent>=10)
 				HudVida15.SetVisible(true);
-			else if (UTP.Health>=5) 
+			else if (healthPercent>=5) 
 				HudVida10.SetVisible(true);
 			else
 				HudVida5.SetVisible(true);
