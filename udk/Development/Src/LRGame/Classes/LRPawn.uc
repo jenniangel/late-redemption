@@ -55,6 +55,7 @@ simulated function PostBeginPlay() {
 	
 	GRI = LRGameReplicationInfo(WorldInfo.GRI);
 	HealthMax = GRI.vidaMarshall; // Ainda não está funcionando
+	Health = GRI.vidaMarshall;
 
 	super.PostBeginPlay();
 }
