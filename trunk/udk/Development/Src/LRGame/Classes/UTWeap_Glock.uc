@@ -42,10 +42,16 @@ simulated function WeaponEmpty()
 	}
 }
 
-function AcionarReload()
+/**
+ * Aciona a ação de reload.
+ **/
+simulated function AcionarReload()
 {
+	local UTPlayerController PC;
+	PC = UTPlayerController(Instigator.Controller);
+	LRPlayerController(PC).PlayPawnReloadAnimation();
 	PlaySound(SomRecarregarArma);
-	SetTimer(2.0, false, 'Reload');
+	SetTimer(2.5, false, 'Reload');
 }
 function Reload()
 {
@@ -429,7 +435,7 @@ defaultproperties
 
 	// Weapon SkeletalMesh
 	Begin Object Name=FirstPersonMesh
-		SkeletalMesh=SkeletalMesh'LateRedemptionMarshall.Mesh.Glock_mesh2'
+		SkeletalMesh=SkeletalMesh'LateRedemptionMarshall.Mesh.glock'
 		AnimSets(0)=AnimSet'LateRedemptionMarshall.Anim.Glock_mesh2'
 		Animations=MeshSequenceA
 		Rotation=(Yaw=-16384)
@@ -439,7 +445,7 @@ defaultproperties
 	AttachmentClass=class'UTAttachment_Glock'
 
 	Begin Object Name=PickupMesh
-		SkeletalMesh=SkeletalMesh'LateRedemptionMarshall.Mesh.Glock_mesh2'
+		SkeletalMesh=SkeletalMesh'LateRedemptionMarshall.Mesh.glock'
 	End Object
 
 	InstantHitMomentum(0)=+10000.0
