@@ -4,6 +4,21 @@ var SkeletalMesh defaultMesh;                  // Custom Mesh member
 var AnimTree defaultAnimTree;                  // Custom Anim member
 var array<AnimSet> defaultAnimSet;             // Custom Anim member
 var PhysicsAsset defaultPhysicsAsset;          // Custom Mesh member
+var AnimNodeSlot test;
+
+/**
+ * Método sobrecarregado para carregar AnimNode 'TestSlot' que contém a animação de 
+ * Reload.
+ */
+simulated event PostInitAnimTree(SkeletalMeshComponent SkelComp)
+{
+	super.PostInitAnimTree(SkelComp);
+
+	if (SkelComp == Mesh)
+	{
+		test = AnimNodeSlot(Mesh.FindAnimNode('TestSlot'));
+	}
+}
 
 simulated function SetCharacterClassFromInfo(class<UTFamilyInfo> Info)
 {	
@@ -50,6 +65,9 @@ simulated function WeaponChanged(UTWeapon NewWeapon) {
 	}
 }
 
+/**
+ * Método sobrecarregado que faz a ligação entre este pawn e o seu controller. 
+ **/
 simulated function PostBeginPlay() {
 	local LRGameReplicationInfo GRI;
 	
@@ -60,12 +78,21 @@ simulated function PostBeginPlay() {
 	super.PostBeginPlay();
 }
 
+/**
+ * Executa a animação de Reload. 
+ **/
+simulated function SetReload()
+{
+	test.PlayCustomAnim('Reload2', 1.0f, 0.1f, 0.1f, false, false, , );
+}
+
 DefaultProperties
 {
 
 	defaultMesh=SkeletalMesh'LateRedemptionMarshall.Mesh.Marshal3ds-7-4'
-	defaultAnimTree=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
+	defaultAnimTree=AnimTree'LateRedemptionMarshall.Anim.AT_CH_Human'
 	defaultAnimSet(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
+	defaultAnimSet(1)=AnimSet'LateRedemptionMarshall.Anim.Marshall_anim'
 	defaultPhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
 
 	SoundGroupClass=class'UTPawnSoundGroup_Marshall'
@@ -75,6 +102,7 @@ DefaultProperties
 	Begin Object Name=WPawnSkeletalMeshComponent
 		SkeletalMesh=SkeletalMesh'LateRedemptionMarshall.Mesh.Marshal3ds-7-4'
 		AnimSets(0)=AnimSet'CH_AnimHuman.Anims.K_AnimHuman_BaseMale'
+		AnimSets(1)=AnimSet'LateRedemptionMarshall.Anim.Marshall_anim'
 		PhysicsAsset=PhysicsAsset'CH_AnimCorrupt.Mesh.SK_CH_Corrupt_Male_Physics'
 		Translation=(Z=14.0)
 		Scale=1.075
@@ -95,7 +123,7 @@ DefaultProperties
 		LightEnvironment=MyLightEnvironment
 		bOverrideAttachmentOwnerVisibility=true
 		bAcceptsDynamicDecals=FALSE
-		AnimTreeTemplate=AnimTree'CH_AnimHuman_Tree.AT_CH_Human'
+		AnimTreeTemplate=AnimTree'LateRedemptionMarshall.Anim.AT_CH_Human'
 		bHasPhysicsAssetInstance=true
 		TickGroup=TG_PreAsyncWork
 		MinDistFactorForKinematicUpdate=0.2
