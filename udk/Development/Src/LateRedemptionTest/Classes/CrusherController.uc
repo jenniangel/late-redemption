@@ -220,8 +220,8 @@ state Pursuit
             distanceToPlayer = VSize(thePlayer.Location - Pawn.Location);
             if (distanceToPlayer < attackDistance)
             {
-               GotoState('Attack');
-               break;
+				GotoState('Attack');
+				break;
             }
             else
             {
