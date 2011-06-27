@@ -341,7 +341,7 @@ function TickHUD() {
 	local PlayerController PC;
 	local int healthPercent;
 	
-	//GRI.ElapsedTime = 0;
+	
 
 	PC = GetPC();
 	
@@ -386,7 +386,16 @@ function TickHUD() {
 	
 			healthPercent = (UTP.Health * 100) / UTP.HealthMax;
 
-			percentualVida.SetString("text",healthPercent$"%");
+			// Alterado em 26/06 para mostrar se quiser o % de vida.
+			if (GRI.mostrarPercentualVida == true )
+			{
+				percentualVida.SetString("text",healthPercent$"%");
+			}
+			else
+			{
+				percentualVida.SetString("text","");
+			}
+
 			
 			// Esconde todos as camadas vermelhas
 			EsconderTodasCamadasVida();
