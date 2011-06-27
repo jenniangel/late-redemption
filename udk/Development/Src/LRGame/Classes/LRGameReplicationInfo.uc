@@ -4,6 +4,7 @@ class LRGameReplicationInfo extends GameReplicationInfo
 
 var bool contaTempo;    // se true, inicia contagem de tempo
 var bool mostrarHora;    // se true, inicia contagem de tempo
+var bool mostrarPercentualVida; // se true, mostra o percentual de vida no HUD
 
 // controla quais badaladas já executaram
 var bool jaTocouUma;
@@ -103,6 +104,7 @@ defaultproperties
 
 	contaTempo = false;
 	mostrarHora = false;
+	mostrarPercentualVida = false;
 
 	tipoMunicao = 1 // munição normal
 	danoMunicao = 20.0; // Munição normal no Go Easy on Me
