@@ -1,0 +1,1 @@
+Projeto do jogo Late Redemption para a disciplina Projeto de Jogos Digitais 2011 realizado na FEEC (Faculdade de Engenharia Elétrica e Computação) da Unicamp - Campinas/SP
